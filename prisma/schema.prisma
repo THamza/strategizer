@@ -1,18 +1,52 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+  id        Int       @id @default(autoincrement())
+  clerkId   String    // The ID of the user in the Clerk system
+  projects  Project[]
+}
+
+model Project {
+  id                Int       @id @default(autoincrement())
+  name              String
+  industry          String
+  targetAudience    String
+  marketingGoals    String
+  budget            Float
+  availableChannels String
+  competitors       String
+  USP               String
+  startDate         DateTime
+  endDate           DateTime
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tasks             Task[]
+  userId            Int
+  user              User      @relation(fields: [userId], references: [id])
+  isCompleted     Boolean  @default(false)
+  isVisible     Boolean  @default(true)
+  isDeleted     Boolean @default(false)
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  type        String
+  content     String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  projectId   Int
+  project     Project   @relation(fields: [projectId], references: [id])
+  isCompleted     Boolean  @default(false)
+  isVisible     Boolean  @default(true)
+  isDeleted     Boolean @default(false)
 }
