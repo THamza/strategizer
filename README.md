@@ -23,7 +23,7 @@ To connect and manage the database, follow these steps:
 4. Use `npx prisma studio` to open Prisma Studio and manage your database.
 
 #### ERD
-<img width="1156" alt="Screenshot 2023-07-05 at 12 16 32 PM" src="https://github.com/THamza/strategizer/assets/36136494/f7f9d3f3-c875-48cf-8745-751d475128f0">
+<img width="1156" alt="Screenshot 2023-07-05 at 12 16 32 PM" src="[https://github.com/THamza/strategizer/assets/36136494/f7f9d3f3-c875-48cf-8745-751d475128f0](https://raw.githubusercontent.com/THamza/strategizer/main/prisma-erd.svg)">
 
 
 ## Versioning and Workflow
