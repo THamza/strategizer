@@ -2,8 +2,8 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
-import { withAuthentication } from "~/server/api/middleware";
-import { checkUserPermission } from "./authorization";
+// import { withAuthentication } from "~/server/api/middleware";
+// import { checkUserPermission } from "../../auth";
 
 // Define the project schema using Zod
 const projectSchema = z.object({
@@ -28,22 +28,23 @@ export const projectRouter = createTRPCRouter({
         project: projectSchema,
       })
     )
-    .mutation(({ input }: { input: { project: (typeof projectSchema)["_type"] } }) => async (
-      { ctx }: { ctx: Context }
-    ) => {
-      // Get the authenticated user ID from the Clerk context
-      const userId = ctx.session.userId;
+    .mutation(
+      ({ input }: { input: { project: (typeof projectSchema)["_type"] } }) =>
+        async ({ ctx }: { ctx: Context }) => {
+          // Get the authenticated user ID from the Clerk context
+          const userId = ctx.session.userId;
 
-      // Create the project in the database
-      const createdProject = await prisma.project.create({
-        data: {
-          ...input.project, // Spread the project properties
-          userId,
-        },
-      });
+          // Create the project in the database
+          const createdProject = await prisma.project.create({
+            data: {
+              ...input.project, // Spread the project properties
+              userId,
+            },
+          });
 
-      return createdProject;
-    }),
+          return createdProject;
+        }
+    ),
 
   // Edit a project
   edit: privateProcedure
@@ -53,62 +54,50 @@ export const projectRouter = createTRPCRouter({
         project: projectSchema,
       })
     )
-    .mutation(({ input }: { input: { project: (typeof projectSchema)["_type"]; projectId: string } }) => async (
-      { ctx }: { ctx: Context }
-    ) => {
-        const { projectId } = input;
-        console.log(projectId);
-        // Update the project in the database
-        const updatedProject = await prisma.project.update({
-          where: {
-            id: projectId,
-          },
-          data: input,
-        });
+    .mutation(
+      ({
+          input,
+        }: {
+          input: {
+            project: (typeof projectSchema)["_type"];
+            projectId: string;
+          };
+        }) =>
+        async ({ ctx }: { ctx: Context }) => {
+          const { projectId } = input;
+          console.log(projectId);
+          // Update the project in the database
+          const updatedProject = await prisma.project.update({
+            where: {
+              id: projectId,
+            },
+            data: input,
+          });
 
-        return updatedProject;
-      }
+          return updatedProject;
+        }
     ),
 
-  // Get data about a specific project
-  getProject: privateProcedure
-    .input(z.string())
-    .query(async ({ input }: { input: string }, { ctx }: { ctx: Context }) => {
-      const projectId = input;
+  // // Get all user projects
+  // getProjects: privateProcedure
+  //   .input(z.string())
+  //   .query(async ({ ctx }: { ctx: Context }) => {
+  //     const
 
-      // Retrieve the project and related posts from the database
-      const project = await prisma.project.findUnique({
-        where: {
-          id: projectId,
-        },
-        include: {
-          posts: true,
-        },
-      });
+  //     // Retrieve the project and related posts from the database
+  //     const project = await prisma.project.findUnique({
+  //       where: {
+  //         userId: "jlkn",
+  //       },
+  //       include: {
+  //         posts: true,
+  //       },
+  //     });
 
-      return project;
-    }),
-
-    // // Delete a project
-    // delete: privateProcedure
-    //   .input(z.string())
-    //   // Delete a project
-    //   .mutation("deleteProject", {
-    //     input: z.string(),
-    //     async resolve({ input }: { input: string }, { ctx }: { ctx: Context }) {
-    //       const projectId = input;
-      
-    //       // Delete the project from the database
-    //       await prisma.project.delete({
-    //         where: {
-    //           id: projectId,
-    //         },
-    //       });
-      
-    //       return true;
-    //     },
-    //   })
+  //     return project;
+  //   }),
 });
 
 // Wrap the project router with authentication middleware
-export const securedProjectRouter = withAuthentication(projectRouter);
+// export const securedProjectRouter = checkUserPermission(projectRouter);
+export const securedProjectRouter = projectRouter;
