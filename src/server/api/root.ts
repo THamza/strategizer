@@ -1,7 +1,7 @@
 import { projectRouter } from "~/server/api/routers/project";
-import { postRouter } from "~/server/api/routers/post";
-import { promptRouter } from "~/server/api/routers/prompt";
+// import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
+import { promptManager } from "../promptManager/promptManager";
 
 /**
  * This is the primary router for your server.
@@ -10,9 +10,10 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   project: projectRouter,
-  post: postRouter,
-  prompt: promptRouter,
+  // post: postRouter,
 });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
+
+export { promptManager };

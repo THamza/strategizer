@@ -2,23 +2,9 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
+import { projectSchema } from "../../tsStyles";
 // import { withAuthentication } from "~/server/api/middleware";
 // import { checkUserPermission } from "../../auth";
-
-// Define the project schema using Zod
-const projectSchema = z.object({
-  name: z.string(),
-  industry: z.string(),
-  targetAudience: z.string(),
-  marketingGoals: z.string(),
-  budget: z.number(),
-  availableChannels: z.string(),
-  competitors: z.string(),
-  USP: z.string(),
-  additionalInfo: z.string(),
-  startDate: z.date(),
-  endDate: z.date(),
-});
 
 export const projectRouter = createTRPCRouter({
   // Create a new project
