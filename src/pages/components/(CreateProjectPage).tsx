@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 
@@ -18,12 +17,11 @@ export default function CreateProjectPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  // Call the createProject mutation using tRPC outside the component function
+  const projectCreationMutation = api.project.create.useMutation();
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
-    // Call the createProject mutation using tRPC
-    const projectCreationMutation = api.project.create.useMutation();
-
     // Execute the mutation
     await projectCreationMutation.mutateAsync({
       project: {
@@ -31,7 +29,7 @@ export default function CreateProjectPage() {
         industry,
         targetAudience,
         marketingGoals,
-        budget: parseFloat(budget),
+        budget,
         availableChannels,
         competitors,
         USP,
@@ -44,7 +42,6 @@ export default function CreateProjectPage() {
     // Redirect to the projects listing page
     router.push("/projects");
   };
-
   return (
     <div>
       <h1>Create Project</h1>
@@ -74,7 +71,7 @@ export default function CreateProjectPage() {
           onChange={(e) => setMarketingGoals(e.target.value)}
         />
         <input
-          type="number"
+          type="text"
           placeholder="Budget"
           value={budget}
           onChange={(e) => setBudget(e.target.value)}

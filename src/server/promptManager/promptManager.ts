@@ -15,32 +15,32 @@ class PromptManager {
 
   initializeGraph() {
     // Nodes
-    this.addNode("youAre", process.env.PROMPT_YOU_ARE!);
-    this.addNode("weAre", process.env.PROMPT_WE_ARE!);
-    this.addNode("task", process.env.PROMPT_TASK!);
-    this.addNode("context", process.env.PROMPT_PROJECT_CONTEXT!);
-    this.addNode("video", process.env.PROMPT_VIDEO!);
-    this.addNode("script", process.env.PROMPT_VIDEO_SCRIPT!);
-    this.addNode("storyboard", process.env.PROMPT_VIDEO_STORYBOARD!);
-    this.addNode("seoKeywords", process.env.PROMPT_SEO_KEYWORDS!);
+    this.createNode("youAre", process.env.PROMPT_YOU_ARE!, false);
+    this.createNode("weAre", process.env.PROMPT_WE_ARE!, false);
+    this.createNode("post", process.env.PROMPT_POST!, false);
+    this.createNode("context", process.env.PROMPT_PROJECT_CONTEXT!, false);
+    this.createNode("video", process.env.PROMPT_VIDEO!, false);
+    this.createNode("script", process.env.PROMPT_VIDEO_SCRIPT!, false);
+    this.createNode("storyboard", process.env.PROMPT_VIDEO_STORYBOARD!, true);
+    this.createNode("seoKeywords", process.env.PROMPT_SEO_KEYWORDS!, false);
 
     // Edges
-    this.addEdge("youAre", "weAre");
-    this.addEdge("weAre", "task");
-    this.addEdge("task", "context");
-    this.addEdge("context", "video");
-    this.addEdge("context", "script");
-    this.addEdge("context", "seoKeywords");
-    this.addEdge("video", "script");
-    this.addEdge("video", "storyboard");
+    this.createEdge("youAre", "weAre");
+    this.createEdge("weAre", "post");
+    this.createEdge("post", "context");
+    this.createEdge("context", "video");
+    this.createEdge("context", "script");
+    this.createEdge("context", "seoKeywords");
+    this.createEdge("video", "script");
+    this.createEdge("video", "storyboard");
   }
 
-  addNode(nodeId: string, data: string) {
-    this.graph.setNode(nodeId, { prompt: data });
+  createNode(nodeId: string, data: string, isIndependant: boolean) {
+    this.graph.addNode(nodeId, { prompt: data, isIndependant });
   }
 
-  addEdge(fromNodeId: string, toNodeId: string) {
-    this.graph.setEdge(fromNodeId, toNodeId);
+  createEdge(fromNodeId: string, toNodeId: string) {
+    this.graph.addEdge(fromNodeId, toNodeId);
   }
 
   async getNode(
@@ -53,7 +53,7 @@ class PromptManager {
 
       if (!nodeData) return undefined;
 
-      const { prompt } = nodeData;
+      const { prompt, isIndependant } = nodeData;
 
       // Replace all occurrences of placeholders in the prompt with corresponding data
       const updatedPrompt = prompt.replace(
@@ -71,7 +71,14 @@ class PromptManager {
         }
       );
 
-      aggregatePrompt += updatedPrompt;
+      if (!isIndependant) {
+        aggregatePrompt += updatedPrompt;
+      } else {
+        /* It means that:
+            - This node must be a leaf
+            - We are only interested in its own prompt only */
+        aggregatePrompt = updatedPrompt;
+      }
 
       if (currentNodeId === nodeId) {
         return aggregatePrompt; // Return the finalized aggregate prompt for the specified node
@@ -96,7 +103,5 @@ class PromptManager {
 }
 
 const promptManager = new PromptManager();
-// Add nodes and edges to the graph
-promptManager.initializeGraph();
 
 export { promptManager };

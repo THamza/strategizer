@@ -15,16 +15,19 @@ const projectSchema = z.object({
 });
 
 const promptGraphMetadataSchema = z.object({
-  socialMediaPlatform: z.string() || null, // Used for generating posts
-  videoLength: z.string() || null, // user for generating video content
+  socialMediaPlatform: z.string() || null, // used for generating posts
+  videoLength: z.string() || null, // used for generating video content
+  videoScript: z.string() || null, // user to generate a storyboard
   field: z.string() || null, // used for generating seo keywords
+  year: z.string() || null,
 });
 
 const pomptGraphNodeSchema = z.object({
   id: z.string(),
   prompt: z.string(),
-  project: projectSchema,
-  metadata: promptGraphMetadataSchema,
+  isIndependant: z.boolean(),
+  //   project: projectSchema,
+  //   metadata: promptGraphMetadataSchema,
 });
 
 export { projectSchema, promptGraphMetadataSchema, pomptGraphNodeSchema };
