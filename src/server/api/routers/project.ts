@@ -3,19 +3,19 @@ import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
 import { projectSchema } from "../../tsStyles";
-// import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
-// import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 // import { TRPCError } from "@trpc/server";
 // import { withAuthentication } from "~/server/api/middleware";
 // import { checkUserPermission } from "../../auth";
 
 // Create a new ratelimiter, that allows 4 requests per 5 minutes
-// const projectCreationRateLimit = new Ratelimit({
-//   redis: Redis.fromEnv(),
-//   limiter: Ratelimit.slidingWindow(4, "5 m"),
-//   analytics: true,
-//   prefix: "@upstash/ratelimit",
-// });
+const projectCreationRateLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(4, "5 m"),
+  analytics: true,
+  prefix: "@upstash/ratelimit",
+});
 
 export const projectRouter = createTRPCRouter({
   // Create a new project
@@ -32,8 +32,8 @@ export const projectRouter = createTRPCRouter({
           const userId = ctx.session.userId;
 
           // Rate limiter
-          // const { success } = await projectCreationRateLimit.limit(userId);
-          // if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+          const { success } = await projectCreationRateLimit.limit(userId);
+          if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
           // Create the project in the database
           const createdProject = await prisma.project.create({

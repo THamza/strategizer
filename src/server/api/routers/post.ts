@@ -1,112 +1,72 @@
-// import { z } from "zod";
-// import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
-// import { prisma } from "~/server/db";
-// import { checkUserPermission, getUserIdFromRequest } from "../../auth";
+import { z } from "zod";
+import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+import { Context } from "~/server/api/context";
+import { prisma } from "~/server/db";
+import { projectSchema } from "../../tsStyles";
+import { promptManager } from "../../promptManager/promptManager";
+import { aiChatManager } from "../../aiChatManager/aiChatManager";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import { TRPCError } from "@trpc/server";
 
-// export const postRouter = createTRPCRouter()
-//   .mutation("createPost", {
-//     input: z.object({
-//       projectId: z.string(),
-//       content: z.string(),
-//     }),
-//     async resolve({ input }, { ctx }) {
-//       const { projectId, content } = input;
+// Create a new ratelimiter, that allows 4 requests per 5 minutes
+const postCreationRateLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(1, "2 m"),
+  analytics: true,
+  prefix: "@upstash/ratelimit",
+});
 
-//       // Check user permission using the helper function
-//       const userId = await getUserIdFromRequest(ctx.req);
-//       await checkUserPermission(userId, projectId);
+export const postRouter = createTRPCRouter({
+  // Create a new post
+  create: privateProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+      })
+    )
+    .mutation(
+      ({ input }: { input: { projectId: string } }) =>
+        async ({ ctx }: { ctx: Context }) => {
+          const userId = ctx.session.userId;
+          const projectId = input.projectId;
 
-//       // Create the post in the database
-//       const post = await prisma.post.create({
-//         data: {
-//           content,
-//           projectId,
-//         },
-//       });
+          // Rate limiter
+          const { success } = await postCreationRateLimit.limit(userId);
+          if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
-//       return post;
-//     },
-//   })
-//   .query("getPostsByProject", {
-//     input: z.string(),
-//     async resolve({ input }, { ctx }) {
-//       const projectId = input;
+          // Get the project from the database
+          const project = await prisma.project.findUnique({
+            where: { id: projectId },
+          });
 
-//       // Check user permission using the helper function
-//       const userId = await getUserIdFromRequest(ctx.req);
-//       await checkUserPermission(userId, projectId);
+          if (!project) {
+            throw new Error(`Project with ID ${projectId} not found`);
+          }
 
-//       // Retrieve posts from the database based on the project ID
-//       const posts = await prisma.post.findMany({
-//         where: {
-//           projectId,
-//         },
-//       });
+          // Get the prompt for the "post" node
+          const promptNodeId = "post";
+          const prompt = await promptManager.getNode(promptNodeId, project, {});
 
-//       return posts;
-//     },
-//   })
-//   .mutation("editPost", {
-//     input: z.object({
-//       postId: z.string(),
-//       content: z.string(),
-//     }),
-//     async resolve({ input }, { ctx }) {
-//       const { postId, content } = input;
+          if (!prompt) {
+            throw new Error(`Prompt not found for node ID ${promptNodeId}`);
+          }
 
-//       // Check user permission using the helper function
-//       const userId = await getUserIdFromRequest(ctx.req);
-//       const post = await prisma.post.findUnique({
-//         where: {
-//           id: postId,
-//         },
-//         select: {
-//           projectId: true,
-//         },
-//       });
-//       if (!post || post.project.userId !== userId) {
-//         throw new Error("Unauthorized");
-//       }
+          // Get the response using AI chat
+          const response = await aiChatManager.getResponse(prompt);
 
-//       // Update the post in the database
-//       const updatedPost = await prisma.post.update({
-//         where: {
-//           id: postId,
-//         },
-//         data: {
-//           content,
-//         },
-//       });
+          // Create the post in the database
+          const createdPost = await prisma.post.create({
+            data: {
+              content: response,
+              projectId: projectId,
+            },
+          });
 
-//       return updatedPost;
-//     },
-//   })
-//   .mutation("deletePost", {
-//     input: z.string(),
-//     async resolve({ input }, { ctx }) {
-//       const postId = input;
+          return createdPost;
+        }
+    ),
+  // Other procedures...
+});
 
-//       // Check user permission using the helper function
-//       const userId = await getUserIdFromRequest(ctx.req);
-//       const post = await prisma.post.findUnique({
-//         where: {
-//           id: postId,
-//         },
-//         select: {
-//           projectId: true,
-//         },
-//       });
-//       if (!post || post.project.userId !== userId) {
-//         throw new Error("Unauthorized");
-//       }
-
-//       // Delete the post from the database
-//       await prisma.post.delete({
-//         where: {
-//           id: postId,
-//         },
-//       });
-
-//       return { success: true };
-//     },
-//   });
+export const securedPostRouter = postRouter;
