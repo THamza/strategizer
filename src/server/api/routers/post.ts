@@ -28,7 +28,7 @@ export const postRouter = createTRPCRouter({
     .mutation(
       ({ input }: { input: { projectId: string } }) =>
         async ({ ctx }: { ctx: Context }) => {
-          const userId = ctx.session.userId;
+          const userId = (ctx.session as { userId: string }).userId;
           const projectId = input.projectId;
 
           // Rate limiter
@@ -46,14 +46,14 @@ export const postRouter = createTRPCRouter({
 
           // Get the prompt for the "post" node
           const promptNodeId = "post";
-          const prompt = await promptManager.getNode(promptNodeId, project, {});
+          const prompt = await promptManager.getPrompt(promptNodeId, project);
 
           if (!prompt) {
             throw new Error(`Prompt not found for node ID ${promptNodeId}`);
           }
 
           // Get the response using AI chat
-          const response = await aiChatManager.getResponse(prompt);
+          const response = await new aiChatManager().getResponse(prompt);
 
           // Create the post in the database
           const createdPost = await prisma.post.create({

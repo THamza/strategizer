@@ -22,6 +22,7 @@ export default function CreateProjectPage() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
     // Execute the mutation
     await projectCreationMutation.mutateAsync({
       project: {
@@ -40,7 +41,7 @@ export default function CreateProjectPage() {
     });
 
     // Redirect to the projects listing page
-    router.push("/projects");
+    // void router.push("/projects");
   };
   return (
     <div>
@@ -71,7 +72,7 @@ export default function CreateProjectPage() {
           onChange={(e) => setMarketingGoals(e.target.value)}
         />
         <input
-          type="text"
+          type="number"
           placeholder="Budget"
           value={budget}
           onChange={(e) => setBudget(e.target.value)}

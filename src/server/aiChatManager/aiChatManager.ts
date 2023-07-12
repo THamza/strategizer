@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
+import { TRPCError } from "@trpc/server";
 
 class aiChatManager {
   configuration: Configuration;
@@ -21,8 +22,15 @@ class aiChatManager {
         n: 1,
       });
 
-      const response = completion.data.choices[0].text.trim();
-      return response;
+      const response =
+        (completion.data.choices && completion.data.choices[0]?.text?.trim()) ||
+        "";
+
+      if (typeof response === "string") {
+        return response;
+      } else {
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      }
     } catch (error) {
       console.error("Error generating AI response:", error);
       throw error;

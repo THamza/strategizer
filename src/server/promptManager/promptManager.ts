@@ -1,11 +1,11 @@
-import { Graph } from "graphology";
+import Graph from "graphology";
 import { projectSchema, promptGraphMetadataSchema } from "../tsStyles";
 
 class PromptManager {
   graph: Graph;
 
   constructor() {
-    this.graph = new Graph({ directed: true });
+    this.graph = new Graph();
     this.initializeGraph();
   }
 
@@ -34,14 +34,16 @@ class PromptManager {
   }
 
   createEdge(fromNodeId: string, toNodeId: string) {
-    this.graph.addEdge(fromNodeId, toNodeId);
+    this.graph.addUndirectedEdge(fromNodeId, toNodeId); // To have undefirected an graph
   }
 
-  async getNode(
+  async getPrompt(
     nodeId: string,
     project: typeof projectSchema,
-    metadata: typeof promptGraphMetadataSchema
+    metadata?: typeof promptGraphMetadataSchema
   ): Promise<string | undefined> {
+    metadata = metadata ? metadata : {};
+    // Get the shortest path between the first youAre node and the chosen node
     const shortestPath = this.graph.shortestPath("youAre", nodeId);
 
     if (!shortestPath) {
@@ -55,14 +57,15 @@ class PromptManager {
 
       if (!nodeData) continue;
 
-      const { prompt, isIndependant } = nodeData;
+      const { prompt, isIndependent } = nodeData; // Corrected typo: 'isIndependant' to 'isIndependent'
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const updatedPrompt = prompt.replace(
         /<([^>]+)>/g,
         (match: string, placeholder: string) => {
           if (placeholder in project) {
             return project[placeholder as keyof typeof projectSchema];
-          } else if (placeholder in metadata) {
+          } else if (metadata !== undefined && placeholder in metadata) {
             return metadata[
               placeholder as keyof typeof promptGraphMetadataSchema
             ];
@@ -72,10 +75,12 @@ class PromptManager {
         }
       );
 
-      if (!isIndependant) {
+      if (!isIndependent) {
         aggregatePrompt += updatedPrompt;
       } else {
-        aggregatePrompt = updatedPrompt;
+        // If the node is an independent node, then break out of the loop and return its content only
+        aggregatePrompt = updatedPrompt as string;
+        break;
       }
     }
 

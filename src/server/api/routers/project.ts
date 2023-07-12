@@ -5,7 +5,7 @@ import { prisma } from "~/server/db";
 import { projectSchema } from "../../tsStyles";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-// import { TRPCError } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 // import { withAuthentication } from "~/server/api/middleware";
 // import { checkUserPermission } from "../../auth";
 
@@ -29,7 +29,7 @@ export const projectRouter = createTRPCRouter({
       ({ input }: { input: { project: (typeof projectSchema)["_type"] } }) =>
         async ({ ctx }: { ctx: Context }) => {
           // Get the authenticated user ID from the Clerk context
-          const userId = ctx.session.userId;
+          const userId = (ctx.session as { userId: string }).userId;
 
           // Rate limiter
           const { success } = await projectCreationRateLimit.limit(userId);
