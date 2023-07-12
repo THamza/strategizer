@@ -15,7 +15,7 @@ model Project {
   industry          String
   targetAudience    String
   marketingGoals    String
-  budget            Float
+  budget            String
   availableChannels String
   competitors       String
   USP               String
