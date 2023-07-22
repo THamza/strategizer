@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
 import { projectSchema } from "../../tsStyles";
@@ -78,6 +82,38 @@ export const projectRouter = createTRPCRouter({
           return updatedProject;
         }
     ),
+  getSummary: privateProcedure.input(z.object({})).query(async ({ ctx }) => {
+    // Get the authenticated user ID from the Clerk context
+    const userId = ctx.auth.userId;
+
+    // Fetch all projects of the user
+    const projects = await prisma.project.findMany({
+      where: {
+        userId: userId || undefined,
+        isDeleted: false,
+      },
+      include: {
+        posts: {
+          select: { id: true },
+        },
+        Video: {
+          select: { id: true },
+        },
+        seoKeywords: {
+          select: { id: true },
+        },
+      },
+    });
+
+    return projects.map((project) => ({
+      name: project.name,
+      counts: {
+        posts: project.posts.length,
+        videos: project.Video.length,
+        seoKeywords: project.seoKeywords.length,
+      },
+    }));
+  }),
 
   // // Get all user projects
   // getProjects: privateProcedure

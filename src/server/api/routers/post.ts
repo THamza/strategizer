@@ -44,9 +44,25 @@ export const postRouter = createTRPCRouter({
             throw new Error(`Project with ID ${projectId} not found`);
           }
 
+          const formattedProject = {
+            name: project.name,
+            industry: project.industry,
+            targetAudience: project.targetAudience,
+            marketingGoals: project.marketingGoals,
+            budget: project.budget,
+            availableChannels: project.availableChannels,
+            competitors: project.competitors,
+            USP: project.USP,
+            additionalInfo: project.additionalInfo,
+            startDate: z.date().parse(project.startDate), // Convert to ZodDate
+            endDate: z.date().parse(project.endDate), // Convert to ZodDate
+          };
+
+          const validatedProject = projectSchema.parse(formattedProject);
+
           // Get the prompt for the "post" node
           const promptNodeId = "post";
-          const prompt = await promptManager.getPrompt(promptNodeId, project);
+          const prompt = promptManager.getPrompt(promptNodeId, validatedProject);
 
           if (!prompt) {
             throw new Error(`Prompt not found for node ID ${promptNodeId}`);
@@ -66,7 +82,6 @@ export const postRouter = createTRPCRouter({
           return createdPost;
         }
     ),
-  // Other procedures...
 });
 
 export const securedPostRouter = postRouter;

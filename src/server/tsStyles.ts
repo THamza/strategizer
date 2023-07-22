@@ -22,12 +22,4 @@ const promptGraphMetadataSchema = z.object({
   year: z.string() || null,
 });
 
-const pomptGraphNodeSchema = z.object({
-  id: z.string(),
-  prompt: z.string(),
-  isIndependant: z.boolean(),
-  //   project: projectSchema,
-  //   metadata: promptGraphMetadataSchema,
-});
-
-export { projectSchema, promptGraphMetadataSchema, pomptGraphNodeSchema };
+export { projectSchema, promptGraphMetadataSchema };
