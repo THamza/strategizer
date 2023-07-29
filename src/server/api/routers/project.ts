@@ -1,93 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  privateProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
-import { Context } from "~/server/api/context";
-import { prisma } from "~/server/db";
-import { projectSchema } from "../../tsStyles";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-import { TRPCError } from "@trpc/server";
-// import { withAuthentication } from "~/server/api/middleware";
-// import { checkUserPermission } from "../../auth";
 
-// Create a new ratelimiter, that allows 4 requests per 5 minutes
-const projectCreationRateLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(4, "5 m"),
-  analytics: true,
-  prefix: "@upstash/ratelimit",
-});
+import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { projectSchema } from "../../tsStyles";
 
 export const projectRouter = createTRPCRouter({
-  // Create a new project
-  create: privateProcedure
-    .input(
-      z.object({
-        project: projectSchema,
-      })
-    )
-    .mutation(
-      ({ input }: { input: { project: (typeof projectSchema)["_type"] } }) =>
-        async ({ ctx }: { ctx: Context }) => {
-          // Get the authenticated user ID from the Clerk context
-          const userId = (ctx.session as { userId: string }).userId;
-
-          // Rate limiter
-          const { success } = await projectCreationRateLimit.limit(userId);
-          if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-
-          // Create the project in the database
-          const createdProject = await prisma.project.create({
-            data: {
-              ...input.project, // Spread the project properties
-              userId,
-            },
-          });
-
-          return createdProject;
-        }
-    ),
-
-  // Edit a project
-  edit: privateProcedure
-    .input(
-      z.object({
-        projectId: z.string(),
-        project: projectSchema,
-      })
-    )
-    .mutation(
-      ({
-          input,
-        }: {
-          input: {
-            project: (typeof projectSchema)["_type"];
-            projectId: string;
-          };
-        }) =>
-        async ({ ctx }: { ctx: Context }) => {
-          const { projectId } = input;
-          console.log(projectId);
-          // Update the project in the database
-          const updatedProject = await prisma.project.update({
-            where: {
-              id: projectId,
-            },
-            data: input,
-          });
-
-          return updatedProject;
-        }
-    ),
-  getSummary: privateProcedure.input(z.object({})).query(async ({ ctx }) => {
+  getSummary: protectedProcedure.query(async ({ ctx }) => {
     // Get the authenticated user ID from the Clerk context
-    const userId = ctx.auth.userId;
+    const userId = ctx.session.user.id;
 
     // Fetch all projects of the user
-    const projects = await prisma.project.findMany({
+    const projects = await ctx.prisma.project.findMany({
       where: {
         userId: userId || undefined,
         isDeleted: false,
@@ -106,6 +32,7 @@ export const projectRouter = createTRPCRouter({
     });
 
     return projects.map((project) => ({
+      id: project.id,
       name: project.name,
       counts: {
         posts: project.posts.length,
@@ -115,26 +42,22 @@ export const projectRouter = createTRPCRouter({
     }));
   }),
 
-  // // Get all user projects
-  // getProjects: privateProcedure
-  //   .input(z.string())
-  //   .query(async ({ ctx }: { ctx: Context }) => {
-  //     const
-
-  //     // Retrieve the project and related posts from the database
-  //     const project = await prisma.project.findUnique({
-  //       where: {
-  //         userId: "jlkn",
-  //       },
-  //       include: {
-  //         posts: true,
-  //       },
-  //     });
-
-  //     return project;
-  //   }),
+  create: protectedProcedure.input(projectSchema).mutation(({ ctx, input }) => {
+    return ctx.prisma.project.create({
+      data: {
+        userId: ctx.session.user.id,
+        name: input.name,
+        industry: input.industry,
+        targetAudience: input.targetAudience,
+        marketingGoals: input.marketingGoals,
+        budget: input.budget,
+        availableChannels: input.availableChannels,
+        competitors: input.competitors,
+        usp: input.usp,
+        additionalInfo: input.additionalInfo,
+        endDate: input.endDate,
+        startDate: input.startDate,
+      },
+    });
+  }),
 });
-
-// Wrap the project router with authentication middleware
-// export const securedProjectRouter = checkUserPermission(projectRouter);
-export const securedProjectRouter = projectRouter;
