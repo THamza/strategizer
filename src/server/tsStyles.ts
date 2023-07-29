@@ -8,7 +8,7 @@ const projectSchema = z.object({
   budget: z.string(),
   availableChannels: z.string(),
   competitors: z.string(),
-  USP: z.string(),
+  usp: z.string(),
   additionalInfo: z.string(),
   startDate: z.date(),
   endDate: z.date(),
