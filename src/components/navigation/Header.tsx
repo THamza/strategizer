@@ -62,7 +62,7 @@ export const Header = () => {
                   className="avatar btn btn-circle btn-ghost"
                   onClick={() => void signOut()}
                 >
-                  <div className="w-10 rounded-full">
+                  <div className="w-8 rounded-full">
                     <Image
                       className="rounded-full"
                       width={40}

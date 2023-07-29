@@ -9,8 +9,6 @@ import { projectSchema } from "../../tsStyles";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { projectSchema } from "../../tsStyles";
 
 // Create a new ratelimiter, that allows 4 requests per 5 minutes
 const projectCreationRateLimit = new Ratelimit({

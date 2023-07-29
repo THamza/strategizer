@@ -1,7 +1,6 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, { useEffect, useState, ReactNode, useRef } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
 import { useSession } from "next-auth/react";
-import ProjectCreationDialog from "../ProjectCreationDialog";
 
 interface ProjectSummary {
   id: string;
@@ -42,14 +41,15 @@ export function SideBar() {
   const { data: sessionData } = useSession();
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [expandedProjects, setExpandedProjects] = useState<string | null>(null);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const { data: projectSummary, isLoading } = api.project.getSummary.useQuery(
-    undefined,
+    undefined, // no input
     {
-      enabled: sessionData?.user !== undefined,
+      enabled: sessionData?.user !== undefined && !hasFetched,
       onSuccess: (data) => {
         setProjects(
-          data.map((project: ProjectSummary) => {
+          data.map((project) => {
             return {
               id: project.id,
               name: project.name,
@@ -57,16 +57,10 @@ export function SideBar() {
             };
           }) ?? []
         );
-        console.log(data);
+        setHasFetched(true);
       },
     }
   );
-
-  useEffect(() => {
-    console.log("isLoading", isLoading);
-    console.log("projectSummary", projectSummary);
-    console.log("projects", projects);
-  }, [isLoading, projectSummary, projects]);
 
   return (
     <>
@@ -121,8 +115,7 @@ export function SideBar() {
             {!isLoading &&
               projects &&
               projects.map((project: ProjectSummary) => (
-                // make border width smaller
-                <li className="pb-4 pt-4" key={project.id}>
+                <li key={project.id}>
                   <button
                     type="button"
                     className="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
@@ -275,8 +268,6 @@ export function SideBar() {
               </div>
             )}
           </ul>
-
-          {/* <ProjectCreationDialog /> */}
         </div>
       </aside>
     </>
