@@ -22,7 +22,7 @@ interface Props {
   className?: string;
 }
 
-export default function ProjectCreationDialog(props: Props) {
+export default function ContentCreationDialog(props: Props) {
   const { className } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -89,7 +89,7 @@ export default function ProjectCreationDialog(props: Props) {
                   <h2 className="mb-4 text-center text-2xl font-bold">
                     Project Creation
                   </h2>
-                  <div className="flex space-x-10 ">
+                  <div className="flex justify-center space-x-10">
                     <label>
                       Name:
                       <input
@@ -227,23 +227,23 @@ export default function ProjectCreationDialog(props: Props) {
                       />
                     </label>
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Submit
-                  </button>
                 </form>
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+          <div className="flex justify-between bg-gray-50 px-4 py-3 sm:flex sm:px-6">
             <button
               onClick={() => setIsModalOpen(false)}
               type="button"
-              className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
+              className="mb-2 mr-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
             >
               Close
+            </button>
+            <button
+              type="submit"
+              className="mb-2 mr-2 rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+            >
+              Submit
             </button>
           </div>
         </div>
@@ -253,25 +253,35 @@ export default function ProjectCreationDialog(props: Props) {
 
   return (
     <div className={className}>
-      <button
-        className="btn btn-circle btn-outline mt-6"
-        onClick={() => setIsModalOpen(true)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
-      </button>
+      <ul className="bg-black-200 menu rounded-box lg:menu-horizontal">
+        <li>
+          <details>
+            <summary>Create</summary>
+            <ul>
+              <li>
+                <a onClick={() => setIsModalOpen(true)}>Project</a>
+              </li>
+              <li>
+                <details>
+                  <summary>Content</summary>
+                  <ul>
+                    <li>
+                      <a>Posts</a>
+                    </li>
+                    <li>
+                      <a>Videos</a>
+                    </li>
+                    <li>
+                      <a>Seo Keywords</a>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+
       {isModalOpen && ReactDOM.createPortal(modal, document.body)}
     </div>
   );

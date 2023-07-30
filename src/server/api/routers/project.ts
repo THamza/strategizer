@@ -24,8 +24,11 @@ export const projectRouter = createTRPCRouter({
     const userId = ctx.session.user.id;
 
     // Rate limiter
-    const { success } = await projectCreationRateLimit.limit(userId);
-    if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+    if (process.env.RATE_LIMITER_ENABLED === "true") {
+      console.log("RATE_LIMITER_ENABLED", process.env.RATE_LIMITER_ENABLED);
+      const { success } = await projectCreationRateLimit.limit(userId);
+      if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+    }
 
     // Fetch all projects of the user
     const projects = await ctx.prisma.project.findMany({

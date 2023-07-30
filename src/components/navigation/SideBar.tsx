@@ -89,14 +89,14 @@ export function SideBar() {
 
       <aside
         id="separator-sidebar"
-        className="fixed left-0 top-24 z-40 h-screen w-64 -translate-x-full transition-transform sm:translate-x-0"
+        className="fixed left-0 top-20 z-40 h-screen w-64 -translate-x-full transition-transform sm:translate-x-0"
         aria-label="Sidebar"
       >
         <div className="h-full overflow-y-auto rounded bg-gray-50 px-3 py-4 dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
             <li className="border-b">
               <a
-                href=""
+                href="/"
                 className="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 <svg

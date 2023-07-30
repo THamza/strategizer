@@ -1,26 +1,18 @@
 import { useState } from "react";
 import { type NextPage } from "next";
-import Head from "next/head";
-import { useSession } from "next-auth/react";
 
 import { api, type RouterOutputs } from "../utils/api";
-import { Header } from "../components/navigation/Header";
-import { SideBar } from "../components/navigation/SideBar";
+
 // import { NoteEditor } from "../components/NoteEditor";
 // import { NoteCard } from "../components/NoteCard";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>Strategizer</title>
-        <meta name="description" content="Marketing Strategy Generator" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <main>
-        <Header />
-        <SideBar />
-        <Content />
+        <div className="ml-72 mt-20">
+          <Content />
+        </div>
       </main>
     </>
   );
@@ -31,8 +23,6 @@ export default Home;
 // type Topic = RouterOutputs["topic"]["getAll"][0];
 
 const Content: React.FC = () => {
-  const { data: sessionData } = useSession();
-
   // const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   // const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
