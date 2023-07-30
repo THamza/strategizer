@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import ReactDOM from "react-dom";
 import { api, type RouterOutputs } from "../utils/api";
+import { useRouter } from "next/router";
 
 interface FormData {
   name: string;
@@ -24,7 +25,10 @@ interface Props {
 
 export default function ContentCreationDialog(props: Props) {
   const { className } = props;
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const projectId = router.query.projectId as string | undefined;
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -41,10 +45,15 @@ export default function ContentCreationDialog(props: Props) {
     additionalInfo: "",
   });
 
-  // Call the useMutation hook at the top level of your component
   const projectCreationMutation = api.project.create.useMutation({
     onSuccess: (d) => {
       setIsModalOpen(false);
+    },
+  });
+
+  const postCreationMutation = api.post.create.useMutation({
+    onSuccess: (d) => {
+      console.log("created");
     },
   });
 
@@ -261,22 +270,38 @@ export default function ContentCreationDialog(props: Props) {
                 <li>
                   <a onClick={() => setIsModalOpen(true)}>Project</a>
                 </li>
-                <li>
-                  <details>
-                    <summary>Content</summary>
-                    <ul>
-                      <li>
-                        <a>Posts</a>
-                      </li>
-                      <li>
-                        <a>Videos</a>
-                      </li>
-                      <li>
-                        <a>Seo Keywords</a>
-                      </li>
-                    </ul>
-                  </details>
-                </li>
+
+                {projectId && (
+                  <li>
+                    <details>
+                      <summary>Content</summary>
+                      <ul>
+                        <li>
+                          <a
+                            onClick={() => {
+                              postCreationMutation.mutate(
+                                { projectId },
+                                {
+                                  onSuccess: () => {
+                                    window.location.reload();
+                                  },
+                                }
+                              );
+                            }}
+                          >
+                            Posts
+                          </a>
+                        </li>
+                        <li>
+                          <a>Videos</a>
+                        </li>
+                        <li>
+                          <a>Seo Keywords</a>
+                        </li>
+                      </ul>
+                    </details>
+                  </li>
+                )}
               </ul>
             </details>
           </li>

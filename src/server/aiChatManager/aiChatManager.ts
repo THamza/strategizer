@@ -1,7 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 import { TRPCError } from "@trpc/server";
 
-class aiChatManager {
+class AiChatManager {
   configuration: Configuration;
   openai: OpenAIApi;
 
@@ -15,7 +15,7 @@ class aiChatManager {
   async getResponse(prompt: string): Promise<string> {
     try {
       const completion = await this.openai.createCompletion({
-        model: "davinci-codex",
+        model: "gpt-3.5-turbo",
         prompt,
         max_tokens: 50,
         temperature: 0.7,
@@ -38,4 +38,4 @@ class aiChatManager {
   }
 }
 
-export { aiChatManager };
+export { AiChatManager };

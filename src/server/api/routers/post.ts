@@ -1,6 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { projectSchema } from "../../tsStyles";
+
+import { aiChatManager } from "../../aiChatManager/AiChatManager";
+
+// import { promptManager } from "../../promptManager/promptManager";
 
 export const postRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -37,13 +47,13 @@ export const postRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        content: z.string(),
         projectId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
+      console.log("userId:", userId);
       // Check if the project belongs to the user before creating a post
       const project = await ctx.prisma.project.findUnique({
         where: { id: input.projectId },
@@ -56,17 +66,45 @@ export const postRouter = createTRPCRouter({
         });
       }
 
+      const formattedProject = {
+        name: project.name,
+        industry: project.industry,
+        targetAudience: project.targetAudience,
+        marketingGoals: project.marketingGoals,
+        budget: project.budget,
+        availableChannels: project.availableChannels,
+        competitors: project.competitors,
+        usp: project.usp,
+        additionalInfo: project.additionalInfo,
+        startDate: z.date().parse(project.startDate), // Convert to ZodDate
+        endDate: z.date().parse(project.endDate), // Convert to ZodDate
+      };
+
+      console.log("formattedProject:", formattedProject);
+
+      // const validatedProject = projectSchema.parse(formattedProject);
+
+      // const promptNodeId = "post";
+      // const prompt = promptManager.getPrompt(promptNodeId, validatedProject);
+
+      const prompt = "Hello GPT!";
+
+      console.log("prompt:", prompt);
+
+      // Get the response using AI chat
+      const response = await new aiChatManager().getResponse(prompt);
+
+      console.log("response GPT:", response);
       const post = await ctx.prisma.post.create({
         data: {
-          content: input.content,
+          content: response,
           projectId: input.projectId,
         },
       });
 
-      console.log("Post created:", post);
-
       return {
         success: true,
+        post: post,
       };
     }),
 });

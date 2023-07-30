@@ -243,6 +243,12 @@ export function SideBar() {
                   )}
                 </li>
               ))}
+            {!isLoading && projects.length === 0 && (
+              <li className="text-gray-500 dark:text-gray-400">
+                No projects found
+              </li>
+            )}
+
             {isLoading && (
               // center spinner
               <div

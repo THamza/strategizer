@@ -59,11 +59,11 @@ const PostsPage: NextPage = () => {
             {posts.map((post) => (
               <div key={post.id} className="card mr-8 w-96 bg-white shadow-xl">
                 <div className="card-body">
-                  <h2 className="card-title">Post {post.id}</h2>
+                  <h2 className="card-title mb-8">{post.id}</h2>
                   <ReactMarkdown skipHtml={false}>
                     {post.content.slice(0, 100)}
                   </ReactMarkdown>
-                  <div className="card-actions justify-between">
+                  <div className="card-actions mt-8 justify-between">
                     <button
                       className="rounded-6 btn border-white bg-white hover:bg-white "
                       onClick={() => handleCopyToClipboard(post.content)}
@@ -98,7 +98,8 @@ const PostsPage: NextPage = () => {
                     </button>
 
                     <button
-                      className="btn btn-primary"
+                      // make smaller button
+                      className="bg-dark hover:bg-dark-700 rounded-6 btn text-white"
                       onClick={() => handleExpandPost(post)}
                     >
                       Expand
@@ -113,7 +114,10 @@ const PostsPage: NextPage = () => {
               <div className="modal-box">
                 <ReactMarkdown skipHtml={false}>{expandedPost}</ReactMarkdown>
                 <div className="modal-action">
-                  <button className="btn" onClick={() => setExpandedPost(null)}>
+                  <button
+                    className="btn text-white"
+                    onClick={() => setExpandedPost(null)}
+                  >
                     Close
                   </button>
                 </div>

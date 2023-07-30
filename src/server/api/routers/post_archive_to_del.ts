@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
 import { projectSchema } from "../../tsStyles";
 import { promptManager } from "../../promptManager/promptManager";
-import { aiChatManager } from "../../aiChatManager/aiChatManager";
+import { aiChatManager } from "../../aiChatManager/AiChatManager";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { TRPCError } from "@trpc/server";
@@ -62,7 +66,10 @@ export const postRouter = createTRPCRouter({
 
           // Get the prompt for the "post" node
           const promptNodeId = "post";
-          const prompt = promptManager.getPrompt(promptNodeId, validatedProject);
+          const prompt = promptManager.getPrompt(
+            promptNodeId,
+            validatedProject
+          );
 
           if (!prompt) {
             throw new Error(`Prompt not found for node ID ${promptNodeId}`);
@@ -72,6 +79,7 @@ export const postRouter = createTRPCRouter({
           const response = await new aiChatManager().getResponse(prompt);
 
           // Create the post in the database
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           const createdPost = await prisma.post.create({
             data: {
               content: response,
