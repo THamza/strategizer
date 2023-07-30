@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ReactNode, useRef } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface ProjectSummary {
   id: string;
@@ -95,7 +96,7 @@ export function SideBar() {
         <div className="h-full overflow-y-auto rounded bg-gray-50 px-3 py-4 dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
             <li className="border-b">
-              <a
+              <Link
                 href="/"
                 className="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
@@ -110,7 +111,7 @@ export function SideBar() {
                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                 </svg>
                 <span className="ml-3">Dashboard</span>
-              </a>
+              </Link>
             </li>
             {!isLoading &&
               projects &&
@@ -152,9 +153,9 @@ export function SideBar() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="m1 1 4 4 4-4"
                       />
                     </svg>
@@ -184,9 +185,9 @@ export function SideBar() {
                             >
                               <path
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M18 5h1v12a2 2 0 0 1-2 2m0 0a2 2 0 0 1-2-2V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v15a2 2 0 0 0 2 2h14ZM10 4h2m-2 3h2m-8 3h8m-8 3h8m-8 3h8M4 4h3v3H4V4Z"
                               />
                             </svg>
@@ -228,9 +229,9 @@ export function SideBar() {
                             >
                               <path
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M6 1v4a1 1 0 0 1-1 1H1m4 4 1 6 2-4 2 4 1-6m4-8v16a.97.97 0 0 1-.933 1H1.933A.97.97 0 0 1 1 18V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2Z"
                               />
                             </svg>

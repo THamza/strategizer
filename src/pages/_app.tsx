@@ -18,9 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <Header />
       <Component {...pageProps} />
-      <div className="fixed bottom-0 right-0 z-10 flex items-center justify-end pb-4 pr-4">
-        <ContentCreationDialog />
-      </div>
+      <ContentCreationDialog />
     </SessionProvider>
   );
 };

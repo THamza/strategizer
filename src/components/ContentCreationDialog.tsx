@@ -44,7 +44,6 @@ export default function ContentCreationDialog(props: Props) {
   // Call the useMutation hook at the top level of your component
   const projectCreationMutation = api.project.create.useMutation({
     onSuccess: (d) => {
-      console.log("d", d);
       setIsModalOpen(false);
     },
   });
@@ -253,36 +252,38 @@ export default function ContentCreationDialog(props: Props) {
 
   return (
     <div className={className}>
-      <ul className="bg-black-200 menu rounded-box lg:menu-horizontal">
-        <li>
-          <details>
-            <summary>Create</summary>
-            <ul>
-              <li>
-                <a onClick={() => setIsModalOpen(true)}>Project</a>
-              </li>
-              <li>
-                <details>
-                  <summary>Content</summary>
-                  <ul>
-                    <li>
-                      <a>Posts</a>
-                    </li>
-                    <li>
-                      <a>Videos</a>
-                    </li>
-                    <li>
-                      <a>Seo Keywords</a>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-            </ul>
-          </details>
-        </li>
-      </ul>
+      <div className="fixed bottom-0 right-0 z-10 flex items-center justify-end pb-4 pr-4">
+        <ul className="bg-black-200 menu rounded-box lg:menu-horizontal">
+          <li>
+            <details>
+              <summary>Create</summary>
+              <ul>
+                <li>
+                  <a onClick={() => setIsModalOpen(true)}>Project</a>
+                </li>
+                <li>
+                  <details>
+                    <summary>Content</summary>
+                    <ul>
+                      <li>
+                        <a>Posts</a>
+                      </li>
+                      <li>
+                        <a>Videos</a>
+                      </li>
+                      <li>
+                        <a>Seo Keywords</a>
+                      </li>
+                    </ul>
+                  </details>
+                </li>
+              </ul>
+            </details>
+          </li>
+        </ul>
 
-      {isModalOpen && ReactDOM.createPortal(modal, document.body)}
+        {isModalOpen && ReactDOM.createPortal(modal, document.body)}
+      </div>
     </div>
   );
 }
