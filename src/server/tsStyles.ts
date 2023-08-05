@@ -8,7 +8,7 @@ const projectSchema = z.object({
   budget: z.string(),
   availableChannels: z.string(),
   competitors: z.string(),
-  USP: z.string(),
+  usp: z.string(),
   additionalInfo: z.string(),
   startDate: z.date(),
   endDate: z.date(),
@@ -22,12 +22,4 @@ const promptGraphMetadataSchema = z.object({
   year: z.string() || null,
 });
 
-const pomptGraphNodeSchema = z.object({
-  id: z.string(),
-  prompt: z.string(),
-  isIndependant: z.boolean(),
-  //   project: projectSchema,
-  //   metadata: promptGraphMetadataSchema,
-});
-
-export { projectSchema, promptGraphMetadataSchema, pomptGraphNodeSchema };
+export { projectSchema, promptGraphMetadataSchema };

@@ -29,21 +29,19 @@ class PromptManager {
     this.createEdge("video", "storyboard");
   }
 
-  createNode(nodeId: string, data: string, isIndependant: boolean) {
-    this.graph.addNode(nodeId, { prompt: data, isIndependant });
+  createNode(nodeId: string, data: string, isIndependent: boolean) {
+    this.graph.addNode(nodeId, { prompt: data, isIndependent });
   }
 
   createEdge(fromNodeId: string, toNodeId: string) {
-    this.graph.addUndirectedEdge(fromNodeId, toNodeId); // To have undefirected an graph
+    this.graph.addUndirectedEdge(fromNodeId, toNodeId);
   }
 
-  async getPrompt(
+  getPrompt(
     nodeId: string,
     project: typeof projectSchema,
     metadata?: typeof promptGraphMetadataSchema
-  ): Promise<string | undefined> {
-    metadata = metadata ? metadata : {};
-    // Get the shortest path between the first youAre node and the chosen node
+  ): string | undefined {
     const shortestPath = this.graph.shortestPath("youAre", nodeId);
 
     if (!shortestPath) {
@@ -57,9 +55,8 @@ class PromptManager {
 
       if (!nodeData) continue;
 
-      const { prompt, isIndependent } = nodeData; // Corrected typo: 'isIndependant' to 'isIndependent'
+      const { prompt, isIndependent } = nodeData;
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const updatedPrompt = prompt.replace(
         /<([^>]+)>/g,
         (match: string, placeholder: string) => {
@@ -78,11 +75,12 @@ class PromptManager {
       if (!isIndependent) {
         aggregatePrompt += updatedPrompt;
       } else {
-        // If the node is an independent node, then break out of the loop and return its content only
         aggregatePrompt = updatedPrompt as string;
         break;
       }
     }
+
+    // TODO: handle the special case of SEO keywords
 
     return aggregatePrompt;
   }

@@ -5,17 +5,17 @@ import { useRouter } from "next/router";
 export default function CreateProjectPage() {
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [targetAudience, setTargetAudience] = useState("");
-  const [marketingGoals, setMarketingGoals] = useState("");
-  const [budget, setBudget] = useState("");
-  const [availableChannels, setAvailableChannels] = useState("");
-  const [competitors, setCompetitors] = useState("");
-  const [USP, setUSP] = useState("");
-  const [additionalInfo, setAdditionalInfo] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [name, setName] = useState<string>("");
+  const [industry, setIndustry] = useState<string>("");
+  const [targetAudience, setTargetAudience] = useState<string>("");
+  const [marketingGoals, setMarketingGoals] = useState<string>("");
+  const [budget, setBudget] = useState<string>("");
+  const [availableChannels, setAvailableChannels] = useState<string>("");
+  const [competitors, setCompetitors] = useState<string>("");
+  const [USP, setUSP] = useState<string>("");
+  const [additionalInfo, setAdditionalInfo] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   // Call the createProject mutation using tRPC outside the component function
   const projectCreationMutation = api.project.create.useMutation();
