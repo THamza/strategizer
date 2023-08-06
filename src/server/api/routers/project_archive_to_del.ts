@@ -6,7 +6,7 @@ import {
 } from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
-import { projectSchema } from "../../tsStyles";
+import { projectSchema } from "../../../utils/tsStyles";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { TRPCError } from "@trpc/server";

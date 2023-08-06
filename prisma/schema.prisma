@@ -127,7 +127,7 @@ model Storyboard {
 
 model Post {
   id        String  @id @default(cuid())
-  content   String
+  content   String  @db.Text
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
 

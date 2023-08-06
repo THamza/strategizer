@@ -15,11 +15,13 @@ const projectSchema = z.object({
 });
 
 const promptGraphMetadataSchema = z.object({
-  socialMediaPlatform: z.string() || null, // used for generating posts
-  videoLength: z.string() || null, // used for generating video content
-  videoScript: z.string() || null, // user to generate a storyboard
-  field: z.string() || null, // used for generating seo keywords
-  year: z.string() || null,
+  socialMediaPlatform: z.string().nullable(), // used for generating posts
+  videoLength: z.string().nullable(), // used for generating video content
+  videoScript: z.string().nullable(), // user to generate a storyboard
+  field: z.string().nullable(), // used for generating seo keywords
+  year: z.string().nullable(),
 });
+
+export type PromptGraphMetadataType = z.infer<typeof promptGraphMetadataSchema>;
 
 export { projectSchema, promptGraphMetadataSchema };

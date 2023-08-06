@@ -5,7 +5,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { projectSchema } from "../../tsStyles";
+import { projectSchema } from "../../../utils/tsStyles";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { TRPCError } from "@trpc/server";

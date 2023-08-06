@@ -6,11 +6,13 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { projectSchema } from "../../tsStyles";
+import { projectSchema } from "../../../utils/tsStyles";
+import { Project } from "../../../utils/types";
+import { promptGraphMetadataSchema } from "../../../utils/tsStyles";
 
-import { aiChatManager } from "../../aiChatManager/AiChatManager";
+// import { aiChatManager } from "../../aiChatManager/AiChatManager";
 
-// import { promptManager } from "../../promptManager/promptManager";
+import { promptManager } from "../../promptManager/promptManager";
 
 export const postRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -48,6 +50,7 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         projectId: z.string(),
+        socialMediaPlatform: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -82,22 +85,40 @@ export const postRouter = createTRPCRouter({
 
       console.log("formattedProject:", formattedProject);
 
-      // const validatedProject = projectSchema.parse(formattedProject);
+      const validatedProject: Project = projectSchema.parse(
+        formattedProject
+      ) as Project;
 
-      // const promptNodeId = "post";
-      // const prompt = promptManager.getPrompt(promptNodeId, validatedProject);
+      const metadata = {
+        socialMediaPlatform: input.socialMediaPlatform,
+        videoLength: "",
+        videoScript: "",
+        field: "",
+        year: "",
+      };
 
-      const prompt = "Hello GPT!";
+      const parsedMetadata = promptGraphMetadataSchema.parse(metadata);
+
+      const promptNodeId = "post";
+      const prompt = promptManager.getPrompt(
+        promptNodeId,
+        validatedProject,
+        parsedMetadata
+      );
 
       console.log("prompt:", prompt);
+      let temPrompt = prompt || "";
+      if (!prompt) {
+        temPrompt = "No prompt found :(";
+      }
 
       // Get the response using AI chat
-      const response = await new aiChatManager().getResponse(prompt);
+      // const response = await new aiChatManager().getResponse(prompt);
 
-      console.log("response GPT:", response);
+      // console.log("response GPT:", response);
       const post = await ctx.prisma.post.create({
         data: {
-          content: response,
+          content: temPrompt,
           projectId: input.projectId,
         },
       });

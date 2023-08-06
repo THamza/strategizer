@@ -6,7 +6,7 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { Context } from "~/server/api/context";
 import { prisma } from "~/server/db";
-import { projectSchema } from "../../tsStyles";
+import { projectSchema } from "../../../utils/tsStyles";
 import { promptManager } from "../../promptManager/promptManager";
 import { aiChatManager } from "../../aiChatManager/AiChatManager";
 import { Ratelimit } from "@upstash/ratelimit";
@@ -68,7 +68,8 @@ export const postRouter = createTRPCRouter({
           const promptNodeId = "post";
           const prompt = promptManager.getPrompt(
             promptNodeId,
-            validatedProject
+            validatedProject,
+            {}
           );
 
           if (!prompt) {
