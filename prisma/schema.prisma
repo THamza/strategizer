@@ -93,6 +93,8 @@ model SeoKeyword {
   keyword   String
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([projectId])
 }
@@ -103,6 +105,8 @@ model Video {
   project     Project       @relation(fields: [projectId], references: [id])
   scripts     VideoScript[]
   storyboards Storyboard[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([projectId])
 }
@@ -112,6 +116,8 @@ model VideoScript {
   content String
   videoId String
   video   Video  @relation(fields: [videoId], references: [id])
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([videoId])
 }
@@ -121,6 +127,8 @@ model Storyboard {
   content String
   videoId String
   video   Video  @relation(fields: [videoId], references: [id])
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([videoId])
 }
@@ -130,6 +138,8 @@ model Post {
   content   String  @db.Text
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([projectId])
 }
@@ -146,6 +156,8 @@ model Task {
   isDeleted   Boolean   @default(false)
   projectId   String
   project     Project   @relation(fields: [projectId], references: [id])
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([projectId])
   @@index([calendarId])
@@ -156,6 +168,8 @@ model Calendar {
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
   tasks     Task[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@index([projectId])
 }
@@ -165,6 +179,8 @@ model Suggestion {
   content   String
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
-
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  
   @@index([projectId])
 }

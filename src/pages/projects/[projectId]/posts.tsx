@@ -9,7 +9,9 @@ import { useSession } from "next-auth/react";
 import { api, type RouterOutputs } from "../../../utils/api";
 import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/router";
+import { abbreviateText } from "../../../utils/helper";
 import copy from "clipboard-copy";
+import moment from "moment";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
@@ -17,6 +19,8 @@ interface PostSchema {
   id: string;
   content: string;
   projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const PostsPage: NextPage = () => {
@@ -43,11 +47,15 @@ const PostsPage: NextPage = () => {
   const handleCopyToClipboard = async (text: string) => {
     await copy(text);
     setCopyPerformed(true);
-    setTimeout(() => setCopyPerformed(false), 2000);
+    setTimeout(() => setCopyPerformed(false), 800);
     return;
   };
   const handleExpandPost = (post: PostSchema) => {
     setExpandedPost(post.content);
+  };
+
+  const extractFirstSentence = (content: string) => {
+    return content.split(".")[0] + ".";
   };
 
   return (
@@ -59,9 +67,22 @@ const PostsPage: NextPage = () => {
             {posts.map((post) => (
               <div key={post.id} className="card mr-8 w-96 bg-white shadow-xl">
                 <div className="card-body">
-                  <h2 className="card-title mb-8">{post.id}</h2>
+                  {/* Display the first sentence as the title */}
+                  <div className="text-right text-sm text-gray-400">
+                    {moment(post.createdAt).fromNow()}
+                  </div>
+                  <h2 className="card-title mb-4 mt-2">
+                    {abbreviateText(extractFirstSentence(post.content), 50)}
+                  </h2>
+                  {/* Display the "time ago" message */}
                   <ReactMarkdown skipHtml={false}>
-                    {post.content.slice(0, 100)}
+                    {abbreviateText(
+                      post.content
+                        .replace(extractFirstSentence(post.content), "")
+                        .trim(),
+                      250
+                    )}
+                    {/* Remove the first sentence from the content */}
                   </ReactMarkdown>
                   <div className="card-actions mt-8 justify-between">
                     <button

@@ -13,7 +13,7 @@ export default function PostCreationForm(props: Props) {
   const { className, projectId, setIsNewPostModalOpen } = props;
   const [errorMessage, setErrorMessage] = useState<string | null>("");
   const [selectSocialMediaPlatform, setSelectSocialMediaPlatform] =
-    useState<string>("");
+    useState<string>(SOCIAL_MEDIA_PLATFORMS[0]?.name || "");
 
   const postCreationMutation = api.post.create.useMutation({
     onSuccess: (d) => {

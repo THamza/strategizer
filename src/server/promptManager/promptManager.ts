@@ -99,7 +99,7 @@ class PromptManager {
       }
     }
 
-    // TODO: handle the special case of SEO keywords
+    // TODO: handle the special case of SEO keywords. ?
 
     return aggregatePrompt;
   }

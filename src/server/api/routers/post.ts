@@ -42,7 +42,7 @@ export const postRouter = createTRPCRouter({
           projectId: input.projectId,
         },
       });
-
+      console.log("posts:", posts);
       return posts;
     }),
 
@@ -97,13 +97,11 @@ export const postRouter = createTRPCRouter({
         year: "",
       };
 
-      const parsedMetadata = promptGraphMetadataSchema.parse(metadata);
-
       const promptNodeId = "post";
       const prompt = promptManager.getPrompt(
         promptNodeId,
         validatedProject,
-        parsedMetadata
+        promptGraphMetadataSchema.parse(metadata)
       );
 
       console.log("prompt:", prompt);
