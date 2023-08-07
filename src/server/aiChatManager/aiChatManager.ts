@@ -14,23 +14,31 @@ class AiChatManager {
 
   async getResponse(prompt: string): Promise<string> {
     try {
-      const completion = await this.openai.createCompletion({
-        model: "gpt-3.5-turbo",
-        prompt,
-        max_tokens: 50,
-        temperature: 0.7,
-        n: 1,
-      });
+      const completion = await this.openai
+        .createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 1,
+          max_tokens: 256,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        })
+        .then((data) => {
+          let response = data?.data?.choices?.[0]?.message?.content || "";
 
-      const response =
-        (completion.data.choices && completion.data.choices[0]?.text?.trim()) ||
-        "";
-
-      if (typeof response === "string") {
-        return response;
-      } else {
-        throw new TRPCError({ code: "BAD_REQUEST" });
-      }
+          if (typeof response === "string") {
+            return response;
+          } else {
+            throw new TRPCError({ code: "BAD_REQUEST" });
+          }
+        });
+      return completion;
     } catch (error) {
       console.error("Error generating AI response:", error);
       throw error;

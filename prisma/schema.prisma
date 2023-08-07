@@ -137,9 +137,9 @@ model Post {
   id        String  @id @default(cuid())
   content   String  @db.Text
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
+  project   Project @relation(fields: [projectId], references: [id])
 
   @@index([projectId])
 }

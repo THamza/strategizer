@@ -10,7 +10,7 @@ import { projectSchema } from "../../../utils/tsStyles";
 import { Project } from "../../../utils/types";
 import { promptGraphMetadataSchema } from "../../../utils/tsStyles";
 
-// import { aiChatManager } from "../../aiChatManager/AiChatManager";
+import { AiChatManager } from "../../aiChatManager/aiChatManager";
 
 import { promptManager } from "../../promptManager/promptManager";
 
@@ -104,19 +104,19 @@ export const postRouter = createTRPCRouter({
         promptGraphMetadataSchema.parse(metadata)
       );
 
-      console.log("prompt:", prompt);
-      let temPrompt = prompt || "";
       if (!prompt) {
-        temPrompt = "No prompt found :(";
+        return {
+          success: false,
+          post: null,
+        };
       }
 
       // Get the response using AI chat
-      // const response = await new aiChatManager().getResponse(prompt);
+      const response = await new AiChatManager().getResponse(prompt);
 
-      // console.log("response GPT:", response);
       const post = await ctx.prisma.post.create({
         data: {
-          content: temPrompt,
+          content: response,
           projectId: input.projectId,
         },
       });
