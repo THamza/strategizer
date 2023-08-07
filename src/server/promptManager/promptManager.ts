@@ -5,6 +5,7 @@ import {
   PromptGraphMetadataType,
 } from "../../utils/tsStyles";
 import { Project } from "../../utils/types";
+import { formatDateValue } from "../../utils/helpers";
 
 class PromptManager {
   graph: Graph;
@@ -71,11 +72,15 @@ class PromptManager {
         /<([^>]+)>/g,
         (match: string, placeholder: string) => {
           // Checking for project properties
-          if (
-            placeholder in project &&
-            typeof currentProject[placeholder as keyof Project] === "string"
-          ) {
-            return currentProject[placeholder as keyof Project];
+          if (placeholder in project) {
+            const projectValue = currentProject[placeholder as keyof Project];
+            const formattedDate = formatDateValue(projectValue);
+
+            if (formattedDate) {
+              return formattedDate;
+            } else if (typeof projectValue === "string") {
+              return projectValue;
+            }
           }
           // Checking for metadata properties
           else if (

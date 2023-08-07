@@ -3,7 +3,10 @@ class PriorityQueue {
   distances: Map<string, number> = new Map();
 
   enqueue(node: string, distance: number) {
-    this.distances.set(node, distance);
+    const existingDistance = this.distances.get(node) || Infinity;
+    if (distance < existingDistance) {
+      this.distances.set(node, distance);
+    }
     this.nodes.add(node);
   }
 
@@ -13,6 +16,8 @@ class PriorityQueue {
 
     for (const node of this.nodes) {
       const distance = this.distances.get(node) || Infinity;
+      console.log("Distances in PQ:", [...this.distances]);
+
       if (distance < minDistance) {
         minDistance = distance;
         minNode = node;

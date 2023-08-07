@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { api, type RouterOutputs } from "../../../utils/api";
 import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/router";
-import { abbreviateText } from "../../../utils/helper";
+import { abbreviateText } from "../../../utils/helpers";
 import copy from "clipboard-copy";
 import moment from "moment";
 
@@ -64,7 +64,7 @@ const PostsPage: NextPage = () => {
         <div className="row ml-72 mt-20">
           <h1 className="text-3xl font-bold">Posts</h1>
           {!isLoading ? (
-            <div className="flex">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
               {posts.map((post) => (
                 <div
                   key={post.id}
