@@ -25,7 +25,7 @@ interface SubMenuProps {
 
 const SubMenu = ({ title, project, icon, link, dataKey }: SubMenuProps) => {
   return (
-    <a
+    <Link
       href={link}
       className="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
     >
@@ -34,7 +34,7 @@ const SubMenu = ({ title, project, icon, link, dataKey }: SubMenuProps) => {
       <span className="ml-3 inline-flex h-3 w-3 items-center justify-center rounded-full bg-blue-100 p-3 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
         {project.counts[dataKey]}
       </span>
-    </a>
+    </Link>
   );
 };
 
@@ -127,7 +127,7 @@ export function SideBar() {
                     }}
                   >
                     <svg
-                      className="h-6 w-6 text-gray-800 dark:text-white"
+                      className="h-4 w-4 text-gray-800 dark:text-white"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -177,7 +177,7 @@ export function SideBar() {
                           project={project}
                           icon={
                             <svg
-                              className="h-6 w-6 text-gray-800 dark:text-white"
+                              className="h-4 w-4 text-gray-800 dark:text-white"
                               aria-hidden="true"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -202,7 +202,7 @@ export function SideBar() {
                           project={project}
                           icon={
                             <svg
-                              className="h-6 w-6 text-gray-800 dark:text-white"
+                              className="h-4 w-4 text-gray-800 dark:text-white"
                               aria-hidden="true"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="currentColor"
@@ -221,7 +221,7 @@ export function SideBar() {
                           project={project}
                           icon={
                             <svg
-                              className="h-6 w-6 text-gray-800 dark:text-white"
+                              className="h-4 w-4 text-gray-800 dark:text-white"
                               aria-hidden="true"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
