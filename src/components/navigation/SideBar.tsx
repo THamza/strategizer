@@ -236,7 +236,7 @@ export function SideBar() {
                               />
                             </svg>
                           }
-                          link={"/projects/" + project.id + "/seo-keywords"}
+                          link={"/projects/" + project.id + "/seo"}
                         />
                       </li>
                     </ul>

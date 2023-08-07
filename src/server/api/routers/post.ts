@@ -42,7 +42,7 @@ export const postRouter = createTRPCRouter({
           projectId: input.projectId,
         },
       });
-      console.log("posts:", posts);
+
       return posts;
     }),
 
