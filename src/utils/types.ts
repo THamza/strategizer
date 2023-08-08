@@ -12,3 +12,8 @@ export type Project = {
   endDate: Date;
   year: string;
 };
+
+export type NodeData = {
+  prompt: string;
+  isIndependent: boolean;
+};

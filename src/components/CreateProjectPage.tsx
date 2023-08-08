@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { api } from "~/utils/api";
+import { api } from "../utils/api";
 import { useRouter } from "next/router";
 
 export default function CreateProjectPage() {
@@ -12,7 +12,7 @@ export default function CreateProjectPage() {
   const [budget, setBudget] = useState<string>("");
   const [availableChannels, setAvailableChannels] = useState<string>("");
   const [competitors, setCompetitors] = useState<string>("");
-  const [USP, setUSP] = useState<string>("");
+  const [usp, setUsp] = useState<string>("");
   const [additionalInfo, setAdditionalInfo] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -20,12 +20,12 @@ export default function CreateProjectPage() {
   // Call the createProject mutation using tRPC outside the component function
   const projectCreationMutation = api.project.create.useMutation();
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Execute the mutation
-    await projectCreationMutation.mutateAsync({
-      project: {
+    projectCreationMutation
+      .mutateAsync({
         name,
         industry,
         targetAudience,
@@ -33,16 +33,19 @@ export default function CreateProjectPage() {
         budget,
         availableChannels,
         competitors,
-        USP,
+        usp,
         additionalInfo,
         startDate: new Date(startDate),
         endDate: new Date(endDate),
-      },
-    });
-
-    // Redirect to the projects listing page
-    // void router.push("/projects");
+      })
+      .then(() => {
+        void router.push("/");
+      })
+      .catch((error) => {
+        console.error("Project creation failed:", error);
+      });
   };
+
   return (
     <div>
       <h1>Create Project</h1>
@@ -91,9 +94,9 @@ export default function CreateProjectPage() {
         />
         <input
           type="text"
-          placeholder="USP"
-          value={USP}
-          onChange={(e) => setUSP(e.target.value)}
+          placeholder="usp"
+          value={usp}
+          onChange={(e) => setUsp(e.target.value)}
         />
         <input
           type="text"

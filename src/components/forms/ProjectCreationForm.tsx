@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
 
 interface FormData {
@@ -85,7 +85,9 @@ export default function ProjectCreationForm(props: Props) {
         </span>
 
         <div
-          className={`inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle ${className}`}
+          className={`inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle ${
+            className ? className : ""
+          }`}
         >
           <div className="w-full bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div className="w-full sm:flex sm:items-start">
@@ -203,7 +205,7 @@ export default function ProjectCreationForm(props: Props) {
                       <input
                         type="date"
                         name="startDate"
-                        value={formData.startDate}
+                        // value={formData.startDate}
                         onChange={handleInputChange}
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
                       />
@@ -214,7 +216,7 @@ export default function ProjectCreationForm(props: Props) {
                       <input
                         type="date"
                         name="endDate"
-                        value={formData.endDate}
+                        // value={formData.endDate}
                         onChange={handleInputChange}
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
                       />
@@ -226,7 +228,7 @@ export default function ProjectCreationForm(props: Props) {
                       <textarea
                         name="additionalInfo"
                         value={formData.additionalInfo}
-                        onChange={handleInputChange}
+                        // onChange={handleInputChange}
                         placeholder="We would like to first focus on the US market, and then expand to Morocco next year."
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
                       />

@@ -1,10 +1,11 @@
 import PriorityQueue from "./priorityQueue";
+import { NodeData } from "../../utils/types";
 
 class Graph {
-  nodes: Map<string, any> = new Map();
+  nodes: Map<string, NodeData> = new Map();
   edges: Map<string, Set<string>> = new Map();
 
-  addNode(nodeId: string, data: any) {
+  addNode(nodeId: string, data: NodeData) {
     if (!this.nodes.has(nodeId)) {
       this.nodes.set(nodeId, data);
       this.edges.set(nodeId, new Set());
@@ -18,11 +19,11 @@ class Graph {
     }
   }
 
-  getNodeAttributes(nodeId: string) {
+  getNodeAttributes(nodeId: string): NodeData | undefined {
     return this.nodes.get(nodeId);
   }
 
-  getAdjacentNodes(nodeId: string) {
+  getAdjacentNodes(nodeId: string): Set<string> | undefined {
     return this.edges.get(nodeId);
   }
 
@@ -49,7 +50,7 @@ class Graph {
       }
 
       if (currentNode === targetNodeId) {
-        let path: string[] = [];
+        const path: string[] = [];
         let current = currentNode;
 
         while (current !== sourceNodeId) {
@@ -65,7 +66,7 @@ class Graph {
 
       const neighbors = this.edges.get(currentNode) || new Set();
       for (const neighbor of neighbors) {
-        let alt = (distances.get(currentNode) || 0) + 1; // Since weight is 1 for all edges
+        const alt = (distances.get(currentNode) || 0) + 1; // Since weight is 1 for all edges
         if (alt < (distances.get(neighbor) || Infinity)) {
           distances.set(neighbor, alt);
           previousNodes.set(neighbor, currentNode);
