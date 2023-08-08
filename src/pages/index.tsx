@@ -3,10 +3,7 @@ import { type NextPage } from "next";
 
 import { api, type RouterOutputs } from "../utils/api";
 
-// import { NoteEditor } from "../components/NoteEditor";
-// import { NoteCard } from "../components/NoteCard";
-
-const Home: NextPage = () => {
+const Dashboard: NextPage = () => {
   return (
     <>
       <main>
@@ -18,50 +15,9 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
-
-// type Topic = RouterOutputs["topic"]["getAll"][0];
+export default Dashboard;
 
 const Content: React.FC = () => {
-  // const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
-
-  // const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
-  //   undefined, // no input
-  //   {
-  //     enabled: sessionData?.user !== undefined,
-  //     onSuccess: (data) => {
-  //       setSelectedTopic(selectedTopic ?? data[0] ?? null);
-  //     },
-  //   }
-  // );
-
-  // const createTopic = api.topic.create.useMutation({
-  //   onSuccess: () => {
-  //     void refetchTopics();
-  //   },
-  // });
-
-  // const { data: notes, refetch: refetchNotes } = api.note.getAll.useQuery(
-  //   {
-  //     topicId: selectedTopic?.id ?? "",
-  //   },
-  //   {
-  //     enabled: sessionData?.user !== undefined && selectedTopic !== null,
-  //   }
-  // );
-
-  // const createNote = api.note.create.useMutation({
-  //   onSuccess: () => {
-  //     void refetchNotes();
-  //   },
-  // });
-
-  // const deleteNote = api.note.delete.useMutation({
-  //   onSuccess: () => {
-  //     void refetchNotes();
-  //   },
-  // });
-
   return (
     <div className="p-4">
       <div className="rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">

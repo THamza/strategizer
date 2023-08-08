@@ -15,7 +15,7 @@ export const Header = () => {
         <meta name="description" content="Marketing Strategy Generator" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav className="dark:bg-gray-90 fixed left-0 top-0 z-20 w-full border-b border-gray-200 bg-gray-900 dark:border-gray-600">
+      <nav className="fixed left-0 top-0 z-20 w-full border-b border-purple-200 bg-purple-900 bg-opacity-20 backdrop-blur-md">
         <div className="flex w-full flex-wrap items-center justify-between p-4">
           <a href="https://flowbite.com/" className="flex items-center">
             <Image
@@ -59,13 +59,23 @@ export const Header = () => {
             className="ml-auto hidden h-auto w-full items-center justify-between md:order-1 md:flex md:h-10 md:w-auto"
             id="navbar-sticky"
           >
-            <input
-              type="text"
-              placeholder="Search..."
-              className="input input-bordered h-8 w-full max-w-xs"
-            />
+            {/* Basic Navigation Links */}
+            <div className="space-x-4">
+              <a href="#" className="text-white hover:text-purple-200">
+                Home
+              </a>
+              <a href="#" className="text-white hover:text-purple-200">
+                About
+              </a>
+              <a href="#" className="text-white hover:text-purple-200">
+                Services
+              </a>
+              <a href="#" className="text-white hover:text-purple-200">
+                Contact
+              </a>
+            </div>
             <div className="ml-8 flex-none gap-2">
-              <div className="dropdown-end dropdown">
+              <div className="dropdown dropdown-end">
                 {sessionData?.user ? (
                   <label
                     tabIndex={0}
@@ -84,7 +94,7 @@ export const Header = () => {
                   </label>
                 ) : (
                   <button
-                    className="btn rounded-btn"
+                    className="btn rounded-full bg-white px-6 py-2 text-purple-900 hover:bg-purple-900 hover:text-white"
                     onClick={() => void signIn()}
                   >
                     Sign in
