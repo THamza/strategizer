@@ -30,7 +30,7 @@ class AiChatManager {
           presence_penalty: 0,
         })
         .then((data) => {
-          let response = data?.data?.choices?.[0]?.message?.content || "";
+          const response = data?.data?.choices?.[0]?.message?.content || "";
 
           if (typeof response === "string") {
             return response;

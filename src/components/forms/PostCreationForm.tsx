@@ -72,7 +72,9 @@ export default function PostCreationForm(props: Props) {
         </span>
 
         <div
-          className={`inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle ${className}`}
+          className={`inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle ${
+            className ? className : ""
+          }`}
         >
           <div className="w-full bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div className="w-full sm:flex sm:items-start">

@@ -4,7 +4,7 @@ import {
   promptGraphMetadataSchema,
   PromptGraphMetadataType,
 } from "../../utils/tsStyles";
-import { Project } from "../../utils/types";
+import { Project, NodeData } from "../../utils/types";
 import { formatDateValue } from "../../utils/helpers";
 
 class PromptManager {
@@ -57,20 +57,21 @@ class PromptManager {
     let aggregatePrompt = "";
 
     for (const currentNodeId of shortestPath) {
-      const nodeData = this.graph.getNodeAttributes(currentNodeId);
+      const nodeData: NodeData | undefined =
+        this.graph.getNodeAttributes(currentNodeId);
 
       if (!nodeData) continue;
 
       const { prompt, isIndependent } = nodeData;
 
-      let currentProject = {
+      const currentProject = {
         ...project,
         year: project.startDate.getFullYear().toString(),
       };
 
       const updatedPrompt = prompt.replace(
         /<([^>]+)>/g,
-        (match: string, placeholder: string) => {
+        (match: string, placeholder: string): string => {
           // Checking for project properties
           if (placeholder in project) {
             const projectValue = currentProject[placeholder as keyof Project];
@@ -89,17 +90,16 @@ class PromptManager {
             typeof metadata[placeholder as keyof PromptGraphMetadataType] ===
               "string"
           ) {
-            return metadata[placeholder as keyof PromptGraphMetadataType];
-          } else {
-            return match;
+            return metadata[placeholder as keyof PromptGraphMetadataType] || "";
           }
+          return match;
         }
       );
 
       if (!isIndependent) {
         aggregatePrompt += updatedPrompt;
       } else {
-        aggregatePrompt = updatedPrompt as string;
+        aggregatePrompt = updatedPrompt;
         break;
       }
     }

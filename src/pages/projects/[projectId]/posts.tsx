@@ -55,7 +55,9 @@ const PostsPage: NextPage = () => {
   };
 
   const extractFirstSentence = (content: string) => {
-    return content.split(".")[0] + ".";
+    const titlelessContent = content.split(".")[0];
+    if (!titlelessContent) return content;
+    return titlelessContent + ".";
   };
 
   return (

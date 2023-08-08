@@ -120,3 +120,8 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - tests
 - add all the checks (rate limitter + project + right access) into some middleware
 - When creting a post, you are asked to select a social media. add the option "Other" where you can write whats special about the social media platform
+
+# TODO:
+
+- fix typescript warnings in several files
+- fix date input in project form creation + additional info
