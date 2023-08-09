@@ -46,6 +46,20 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    // async redirect({ url, baseUrl }) {
+    //   // Check if it's a sign-in event
+    //   if (url === "/api/auth/signin") {
+    //     return baseUrl;
+    //   }
+    //   return url;
+    // },
+    async redirect({ url, baseUrl }) {
+      // If the callbackUrl is provided, redirect to it
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      return baseUrl; // Default behavior: redirect to the base URL
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [

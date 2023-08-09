@@ -1,7 +1,20 @@
 import { type NextPage } from "next";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 const Landing: NextPage = () => {
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    // If the user is logged in, redirect to the homepage
+    if (sessionData?.user) {
+      router.push("/");
+    }
+  }, [sessionData]);
+
   return (
     <main
       className="flex h-screen items-center justify-center bg-cover bg-center"
