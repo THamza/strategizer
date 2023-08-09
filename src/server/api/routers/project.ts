@@ -25,7 +25,6 @@ export const projectRouter = createTRPCRouter({
 
     // Rate limiter
     if (process.env.RATE_LIMITER_ENABLED === "true") {
-      console.log("RATE_LIMITER_ENABLED", process.env.RATE_LIMITER_ENABLED);
       const { success } = await projectCreationRateLimit.limit(userId);
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
     }

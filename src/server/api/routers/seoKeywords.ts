@@ -8,10 +8,20 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { getFormatedProject } from "../../../utils/helpers";
 import { promptGraphMetadataSchema } from "../../../utils/tsStyles";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 import { AiChatManager } from "../../aiChatManager/aiChatManager";
 
 import { promptManager } from "../../promptManager/promptManager";
+
+// Create a new ratelimiter, that allows 4 requests per 5 minutes
+const seoKeywordsCreationRateLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(2, "5 m"),
+  analytics: true,
+  prefix: "@upstash/ratelimit",
+});
 
 export const seoKeywordsRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -57,6 +67,12 @@ export const seoKeywordsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+
+      // Rate limiter
+      if (process.env.RATE_LIMITER_ENABLED === "true") {
+        const { success } = await seoKeywordsCreationRateLimit.limit(userId);
+        if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      }
 
       console.log("userId:", userId);
       // Check if the project belongs to the user before
