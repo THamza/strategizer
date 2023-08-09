@@ -128,3 +128,5 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - add word limit counters
 - disable input fields when page is loading (matlan when you create a post)
 - add pagination
+- make upstash rate limiter variables in env vars
+- bring rate limiters in procedure definiotn pages to utils
