@@ -116,7 +116,7 @@ export const seoKeywordsRouter = createTRPCRouter({
       try {
         response = JSON.parse(responseString);
       } catch (error) {
-        throw new Error("Failed to parse the response: " + error);
+        throw new Error("Failed to parse the response.");
       }
 
       // Validate the response structure
@@ -126,7 +126,7 @@ export const seoKeywordsRouter = createTRPCRouter({
         );
       }
 
-      let seoKeywordsList: string[] = [];
+      const seoKeywordsList: string[] = [];
 
       for (const item of response) {
         if (
@@ -151,7 +151,7 @@ export const seoKeywordsRouter = createTRPCRouter({
           },
         });
 
-        seoKeywordsList.push(item.keyword);
+        seoKeywordsList.push(item.keyword as string);
       }
 
       return {

@@ -15,12 +15,12 @@ export const Header = () => {
   useEffect(() => {
     // If the user is not authenticated and they are not on the /landing page
     if (!sessionData?.user && router.pathname !== "/landing") {
-      router.push("/landing");
+      void router.push("/landing");
     }
 
     // If the user is authenticated and they are on the /landing page
     if (sessionData?.user && router.pathname === "/landing") {
-      router.push("/");
+      void router.push("/");
     }
   }, [sessionData]);
 
