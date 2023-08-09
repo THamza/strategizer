@@ -5,6 +5,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env.mjs";
 import { prisma } from "./db";
@@ -46,13 +47,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    // async redirect({ url, baseUrl }) {
-    //   // Check if it's a sign-in event
-    //   if (url === "/api/auth/signin") {
-    //     return baseUrl;
-    //   }
-    //   return url;
-    // },
     async redirect({ url, baseUrl }) {
       // If the callbackUrl is provided, redirect to it
       if (url.startsWith(baseUrl)) {
@@ -63,6 +57,17 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,

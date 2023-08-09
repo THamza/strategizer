@@ -22,7 +22,11 @@ const config = {
   },
 
   images: {
-    domains: ["i.imgur.com", "avatars.githubusercontent.com"],
+    domains: [
+      "i.imgur.com",
+      "avatars.githubusercontent.com",
+      "lh3.googleusercontent.com",
+    ],
     remotePatterns: [
       {
         protocol: "https",

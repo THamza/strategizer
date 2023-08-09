@@ -9,6 +9,7 @@ import { SideBar } from "../../components/navigation/SideBar";
 
 export const Header = () => {
   const { data: sessionData } = useSession();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export const Header = () => {
         <meta name="description" content="Marketing Strategy Generator" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav className="fixed left-0 top-0 z-20 w-full border-b border-purple-200 bg-purple-900 bg-opacity-20 backdrop-blur-md">
+      <nav className="fixed left-0 top-0 z-20 w-full border-b border-purple-200 bg-purple-900 bg-opacity-80 backdrop-blur-sm">
         <div className="flex w-full flex-wrap items-center justify-between p-4">
           <a
             href="https://strategizer.thamza.com/"
