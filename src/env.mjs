@@ -39,6 +39,7 @@ const server = z.object({
   PROMPT_VIDEO_SCRIPT: z.string(),
   PROMPT_VIDEO_STORYBOARD: z.string(),
   PROMPT_SEO_KEYWORDS: z.string(),
+  PROMPT_GUIDANCE: z.string(),
 });
 
 /**
@@ -80,6 +81,7 @@ const processEnv = {
   PROMPT_VIDEO_SCRIPT: process.env.PROMPT_VIDEO_SCRIPT,
   PROMPT_VIDEO_STORYBOARD: process.env.PROMPT_VIDEO_STORYBOARD,
   PROMPT_SEO_KEYWORDS: process.env.PROMPT_SEO_KEYWORDS,
+  PROMPT_GUIDANCE: process.env.PROMPT_GUIDANCE,
 };
 
 // Don't touch the part below

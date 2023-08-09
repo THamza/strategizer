@@ -125,3 +125,6 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 - fix typescript warnings in several files
 - fix date input in project form creation + additional info
+- add word limit counters
+- disable input fields when page is loading (matlan when you create a post)
+- add pagination

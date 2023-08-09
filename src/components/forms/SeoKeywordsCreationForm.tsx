@@ -1,32 +1,24 @@
 import React from "react";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
-import { SOCIAL_MEDIA_PLATFORMS } from "../utils/constants";
 
 interface Props {
   className?: string;
   projectId: string | undefined;
-  setIsNewPostModalOpen: (isOpen: boolean) => void;
+  setIsNewSeoKeywordsModalOpen: (isOpen: boolean) => void;
 }
 
-export default function PostCreationForm(props: Props) {
-  const { className, projectId, setIsNewPostModalOpen } = props;
+export default function SeoKeywordsCreationForm(props: Props) {
+  const { className, projectId, setIsNewSeoKeywordsModalOpen } = props;
   const [errorMessage, setErrorMessage] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [guidance, setGuidance] = useState<string>("");
-  const [socialMediaPlatform, setSocialMediaPlatform] = useState<string>(
-    SOCIAL_MEDIA_PLATFORMS[0]?.name || ""
-  );
 
-  const postCreationMutation = api.post.create.useMutation({
+  const seoKeywordsCreationMutation = api.seoKeywords.create.useMutation({
     onSuccess: (d) => {
       console.log("created");
     },
   });
-
-  const handleInputChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSocialMediaPlatform(e.target.value);
-  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -36,15 +28,10 @@ export default function PostCreationForm(props: Props) {
       setErrorMessage("Project ID is required");
       return;
     }
-    if (!socialMediaPlatform) {
-      setErrorMessage("Social Media Platform is required");
-      return;
-    }
 
-    postCreationMutation.mutate(
+    seoKeywordsCreationMutation.mutate(
       {
         projectId,
-        socialMediaPlatform,
         guidance,
       },
       {
@@ -84,25 +71,8 @@ export default function PostCreationForm(props: Props) {
               <div className="sm: mr-4 mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <form onSubmit={handleSubmit} className="w-full space-y-4">
                   <h2 className="mb-4 text-center text-2xl font-bold">
-                    Post Creation
+                    Seo Keywords Generation
                   </h2>
-                  <div>
-                    <label>
-                      Social Media Platform:
-                      <select
-                        name="socialMediaPlatform"
-                        value={socialMediaPlatform}
-                        onChange={handleInputChange}
-                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white"
-                      >
-                        {SOCIAL_MEDIA_PLATFORMS.map((platform) => (
-                          <option key={platform.name} value={platform.name}>
-                            {platform.name}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
                   <div>
                     <label>
                       Directives:
@@ -118,7 +88,7 @@ export default function PostCreationForm(props: Props) {
                   {!isLoading ? (
                     <div className="flex justify-between bg-gray-50 px-4 py-3 sm:flex sm:px-6">
                       <button
-                        onClick={() => setIsNewPostModalOpen(false)}
+                        onClick={() => setIsNewSeoKeywordsModalOpen(false)}
                         type="button"
                         className="mb-2 mr-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
                       >

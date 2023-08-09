@@ -20,6 +20,7 @@ const promptGraphMetadataSchema = z.object({
   videoScript: z.string().nullable(), // user to generate a storyboard
   field: z.string().nullable(), // used for generating seo keywords
   year: z.string().nullable(),
+  guidance: z.string().nullable(),
 });
 
 export type PromptGraphMetadataType = z.infer<typeof promptGraphMetadataSchema>;
