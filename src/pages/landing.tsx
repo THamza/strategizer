@@ -11,7 +11,7 @@ const Landing: NextPage = () => {
   useEffect(() => {
     // If the user is logged in, redirect to the homepage
     if (sessionData?.user) {
-      router.push("/");
+      void router.push("/");
     }
   }, [sessionData]);
 

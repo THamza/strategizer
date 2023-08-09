@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
+    redirect({ url, baseUrl }) {
       // If the callbackUrl is provided, redirect to it
       if (url.startsWith(baseUrl)) {
         return url;
