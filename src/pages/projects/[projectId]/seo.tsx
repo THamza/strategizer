@@ -1,18 +1,10 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { api, type RouterOutputs } from "../../../utils/api";
-import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/router";
-import { abbreviateText } from "../../../utils/helpers";
-import copy from "clipboard-copy";
-import moment from "moment";
-import { getPertinenceColor } from "../../../components/utils/helpers";
+
+// import { getPertinenceColor } from "../../../components/utils/helpers";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
