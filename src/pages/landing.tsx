@@ -20,11 +20,11 @@ const Landing: NextPage = () => {
       className="flex h-screen items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: "url('https://i.imgur.com/7Agg5Z4.jpg')" }}
     >
-      <div className="w-1/3 rounded-md bg-white bg-opacity-60 p-10 text-center ">
+      <div className="w-1/3 rounded-md bg-white bg-opacity-80 p-10 text-center ">
         <h1 className="mb-4 text-4xl">Craft Your Marketing Strategy</h1>
         <p className="mb-6 text-xl">
-          Dive into the future of content generation. Leverage the power of
-          ChatGPT to design captivating marketing strategies effortlessly.
+          Dive into the future of content generation. Leverage the power of AI
+          to design captivating marketing strategies effortlessly.
         </p>
         <button
           onClick={() => void signIn()}

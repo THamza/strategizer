@@ -25,7 +25,9 @@ class PromptManager {
     this.createNode("script", process.env.PROMPT_VIDEO_SCRIPT!, false);
     this.createNode("storyboard", process.env.PROMPT_VIDEO_STORYBOARD!, true);
     this.createNode("seoKeywords", process.env.PROMPT_SEO_KEYWORDS!, false);
+    this.createNode("guidance", process.env.PROMPT_GUIDANCE!, false);
 
+    this.createEdge("youAre", "guidance");
     this.createEdge("youAre", "weAre");
     this.createEdge("weAre", "context");
     this.createEdge("context", "video");
@@ -102,6 +104,14 @@ class PromptManager {
         aggregatePrompt = updatedPrompt;
         break;
       }
+    }
+
+    // Adding guidance element to the prompt
+    if (metadata && metadata.guidance) {
+      aggregatePrompt +=
+        this.graph
+          .getNodeAttributes("guidance")
+          ?.prompt.replace("<guidance>", metadata.guidance) || "";
     }
 
     // TODO: handle the special case of SEO keywords. ?

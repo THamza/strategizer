@@ -13,7 +13,7 @@ import { AiChatManager } from "../../aiChatManager/aiChatManager";
 
 import { promptManager } from "../../promptManager/promptManager";
 
-export const postRouter = createTRPCRouter({
+export const seoKeywordsRouter = createTRPCRouter({
   getAll: protectedProcedure
     .input(
       z.object({
@@ -35,21 +35,23 @@ export const postRouter = createTRPCRouter({
         });
       }
 
-      // Then, fetch all posts for the project
-      const posts = await ctx.prisma.post.findMany({
+      // Then, fetch all seoKeywords for the project
+      const seoKeywords = await ctx.prisma.seoKeyword.findMany({
         where: {
           projectId: input.projectId,
         },
+        orderBy: {
+          pertinence: "desc",
+        },
       });
 
-      return posts;
+      return seoKeywords;
     }),
 
   create: protectedProcedure
     .input(
       z.object({
         projectId: z.string(),
-        socialMediaPlatform: z.string(),
         guidance: z.string(),
       })
     )
@@ -57,7 +59,7 @@ export const postRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
 
       console.log("userId:", userId);
-      // Check if the project belongs to the user before creating a post
+      // Check if the project belongs to the user before
       const project = await ctx.prisma.project.findUnique({
         where: { id: input.projectId },
       });
@@ -70,8 +72,8 @@ export const postRouter = createTRPCRouter({
       }
 
       const metadata = {
-        socialMediaPlatform: input.socialMediaPlatform,
         guidance: input.guidance,
+        socialMediaPlatform: "",
         videoLength: "",
         videoScript: "",
         field: "",
@@ -79,7 +81,7 @@ export const postRouter = createTRPCRouter({
       };
 
       const prompt = promptManager.getPrompt(
-        "post",
+        "seoKeywords",
         getFormatedProject(project),
         promptGraphMetadataSchema.parse(metadata)
       );
@@ -87,23 +89,58 @@ export const postRouter = createTRPCRouter({
       if (!prompt) {
         return {
           success: false,
-          post: null,
+          seoKeywords: null,
         };
       }
 
       // Get the response using AI chat
-      const response = await new AiChatManager().getResponse(prompt);
+      const responseString = await new AiChatManager().getResponse(prompt);
 
-      const post = await ctx.prisma.post.create({
-        data: {
-          content: response,
-          projectId: input.projectId,
-        },
-      });
+      let response;
+      try {
+        response = JSON.parse(responseString);
+      } catch (error) {
+        throw new Error("Failed to parse the response: " + error);
+      }
+
+      // Validate the response structure
+      if (!Array.isArray(response)) {
+        throw new Error(
+          "Invalid response format: Expected an array of objects."
+        );
+      }
+
+      let seoKeywordsList: string[] = [];
+
+      for (const item of response) {
+        if (
+          typeof item !== "object" ||
+          !item.hasOwnProperty("keyword") ||
+          typeof item.keyword !== "string" ||
+          !item.hasOwnProperty("pertinence") ||
+          typeof item.pertinence !== "number" ||
+          item.pertinence < 1 ||
+          item.pertinence > 10
+        ) {
+          throw new Error(
+            "Invalid response format: Each object should have a 'keyword' (string) and a 'pertinence' (number between 1 to 10) property."
+          );
+        }
+
+        await ctx.prisma.seoKeyword.create({
+          data: {
+            keyword: item.keyword,
+            pertinence: item.pertinence,
+            projectId: input.projectId,
+          },
+        });
+
+        seoKeywordsList.push(item.keyword);
+      }
 
       return {
         success: true,
-        post: post,
+        seoKeywords: seoKeywordsList,
       };
     }),
 });

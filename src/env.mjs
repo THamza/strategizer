@@ -22,6 +22,24 @@ const server = z.object({
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+
+  OPENAI_API_KEY: z.string(),
+
+  RATE_LIMITER_ENABLED: z.string(),
+  UPSTASH_REDIS_REST_URL: z.string(),
+  UPSTASH_REDIS_REST_TOKEN: z.string(),
+
+  PROMPT_YOU_ARE: z.string(),
+  PROMPT_WE_ARE: z.string(),
+  PROMPT_PROJECT_CONTEXT: z.string(),
+  PROMPT_VIDEO: z.string(),
+  PROMPT_POST: z.string(),
+  PROMPT_VIDEO_SCRIPT: z.string(),
+  PROMPT_VIDEO_STORYBOARD: z.string(),
+  PROMPT_SEO_KEYWORDS: z.string(),
+  PROMPT_GUIDANCE: z.string(),
 });
 
 /**
@@ -45,7 +63,25 @@ const processEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+
+  RATE_LIMITER_ENABLED: process.env.RATE_LIMITER_ENABLED,
+  UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+  UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+
+  PROMPT_YOU_ARE: process.env.PROMPT_YOU_ARE,
+  PROMPT_WE_ARE: process.env.PROMPT_WE_ARE,
+  PROMPT_PROJECT_CONTEXT: process.env.PROMPT_PROJECT_CONTEXT,
+  PROMPT_VIDEO: process.env.PROMPT_VIDEO,
+  PROMPT_POST: process.env.PROMPT_POST,
+  PROMPT_VIDEO_SCRIPT: process.env.PROMPT_VIDEO_SCRIPT,
+  PROMPT_VIDEO_STORYBOARD: process.env.PROMPT_VIDEO_STORYBOARD,
+  PROMPT_SEO_KEYWORDS: process.env.PROMPT_SEO_KEYWORDS,
+  PROMPT_GUIDANCE: process.env.PROMPT_GUIDANCE,
 };
 
 // Don't touch the part below
