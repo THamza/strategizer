@@ -3,7 +3,8 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
 import { SOCIAL_MEDIA_PLATFORMS } from "../utils/constants";
 
-import { SEOKeywordsMultiselect } from "./SeoKeywordsMultiselect";
+import { SeoKeywordsMultiselect } from "./SeoKeywordsMultiselect";
+import { SocialMediaRadioSelect } from "./SocialMediaRadioSelect";
 
 interface SeoKeywordSchema {
   id: string;
@@ -101,26 +102,15 @@ export default function PostCreationForm(props: Props) {
                   <h2 className="mb-4 text-center text-2xl font-bold">
                     Post Creation
                   </h2>
-                  <div>
-                    <label>
-                      Social Media Platform:
-                      <select
-                        name="socialMediaPlatform"
-                        value={socialMediaPlatform}
-                        onChange={handleInputChange}
-                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white"
-                      >
-                        {SOCIAL_MEDIA_PLATFORMS.map((platform) => (
-                          <option key={platform.name} value={platform.name}>
-                            {platform.name}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
 
                   <div className="w-full ">
-                    <SEOKeywordsMultiselect
+                    <SocialMediaRadioSelect
+                      setSocialMediaPlatform={setSocialMediaPlatform}
+                      socialMediaPlatform={socialMediaPlatform}
+                    />
+                  </div>
+                  <div className="w-full ">
+                    <SeoKeywordsMultiselect
                       setSelectedSeoKeywords={setSelectedSeoKeywords}
                       projectId={projectId}
                     />

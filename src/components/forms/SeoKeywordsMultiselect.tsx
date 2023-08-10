@@ -11,7 +11,7 @@ interface SeoKeywordSchema {
   updatedAt: Date;
 }
 
-export const SEOKeywordsMultiselect = (props: {
+export const SeoKeywordsMultiselect = (props: {
   setSelectedSeoKeywords: Dispatch<SetStateAction<SeoKeywordSchema[]>>;
   projectId: string | undefined;
 }) => {
@@ -20,6 +20,7 @@ export const SEOKeywordsMultiselect = (props: {
   const [hasFetchedSeoKeywords, setHasFetchedSeoKeywords] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [seoKeywords, setSeoKeywords] = useState<SeoKeywordSchema[]>([]);
+  const [newKeyword, setNewKeyword] = useState("");
 
   const { isLoading } = api.seoKeywords.getAll.useQuery(
     { projectId: projectId || "" },
@@ -85,41 +86,54 @@ export const SEOKeywordsMultiselect = (props: {
         } w-full rounded-lg bg-white shadow dark:bg-gray-700 `}
       >
         <div className="p-3">
-          <label htmlFor="input-group-search" className="sr-only">
-            Search
+          <label htmlFor="add-keyword-input" className="sr-only">
+            Add New Keyword
           </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <svg
-                className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
+          <div className="flex">
+            {" "}
+            <div className="relative flex-grow">
+              {" "}
+              <input
+                type="text"
+                id="add-keyword-input"
+                className="h-10 w-full rounded-l-lg border border-gray-300 bg-gray-50 p-2 pl-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Add new keyword"
+                value={newKeyword}
+                onChange={(e) => setNewKeyword(e.target.value)}
+              />
             </div>
-            <input
-              type="text"
-              id="input-group-search"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="Search user"
-            />
+            <button
+              className="h-10 rounded-r-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+              onClick={(e) => {
+                e.preventDefault();
+                setNewKeyword("");
+                setSelectedSeoKeywords((prevKeywords) => [
+                  ...prevKeywords,
+                  {
+                    id: "new" + Math.random().toString(),
+                    keyword: "testettt s",
+                    projectId: projectId || "",
+                    pertinence: 10,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                  },
+                ]);
+              }}
+            >
+              Add
+            </button>
           </div>
         </div>
+
         <ul
           className="h-48 overflow-y-auto px-3 pb-3 text-sm text-gray-700 dark:text-gray-200"
           aria-labelledby="dropdownSearchButton"
         >
           {seoKeywords.map((keywordObject) => (
-            <div className="flex rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+            <div
+              key={keywordObject.id}
+              className="flex rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
               <div className="flex h-5 items-center">
                 <input
                   id="helper-checkbox-2"
@@ -147,21 +161,6 @@ export const SEOKeywordsMultiselect = (props: {
             </div>
           ))}
         </ul>
-        <a
-          href="#"
-          className="flex items-center rounded-b-lg border-t border-gray-200 bg-gray-50 p-3 text-sm font-medium text-red-600 hover:bg-gray-100 hover:underline dark:border-gray-600 dark:bg-gray-700 dark:text-red-500 dark:hover:bg-gray-600"
-        >
-          <svg
-            className="mr-2 h-4 w-4"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 18"
-          >
-            <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-6a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2Z" />
-          </svg>
-          Delete user
-        </a>
       </div>
     </>
   );
