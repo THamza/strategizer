@@ -130,3 +130,4 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - add pagination
 - make upstash rate limiter variables in env vars
 - bring rate limiters in procedure definiotn pages to utils
+- check out the video length, jpense not handled in the prompts

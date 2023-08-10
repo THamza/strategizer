@@ -2,6 +2,7 @@ import { createTRPCRouter } from "./trpc";
 import { projectRouter } from "./routers/project";
 import { postRouter } from "./routers/post";
 import { seoKeywordsRouter } from "./routers/seoKeywords";
+import { videoRouter } from "./routers/video";
 
 /**
  * This is the primary router for your server.
@@ -12,6 +13,7 @@ export const appRouter = createTRPCRouter({
   project: projectRouter,
   post: postRouter,
   seoKeywords: seoKeywordsRouter,
+  video: videoRouter,
 });
 
 // export type definition of API

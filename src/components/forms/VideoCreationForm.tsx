@@ -5,16 +5,17 @@ import { api, type RouterOutputs } from "../../utils/api";
 interface Props {
   className?: string;
   projectId: string | undefined;
-  setIsNewSeoKeywordsModalOpen: (isOpen: boolean) => void;
+  setIsNewVideoModalOpen: (isOpen: boolean) => void;
 }
 
-export default function SeoKeywordsCreationForm(props: Props) {
-  const { className, projectId, setIsNewSeoKeywordsModalOpen } = props;
+export default function VideoCreationForm(props: Props) {
+  const { className, projectId, setIsNewVideoModalOpen } = props;
   const [errorMessage, setErrorMessage] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [guidance, setGuidance] = useState<string>("");
+  const [videoLength, setVideoLength] = useState<string>("");
 
-  const seoKeywordsCreationMutation = api.seoKeywords.create.useMutation({
+  const videoCreationMutation = api.video.create.useMutation({
     onSuccess: (d) => {
       console.log("created");
     },
@@ -29,10 +30,11 @@ export default function SeoKeywordsCreationForm(props: Props) {
       return;
     }
 
-    seoKeywordsCreationMutation.mutate(
+    videoCreationMutation.mutate(
       {
         projectId,
         guidance,
+        videoLength,
       },
       {
         onSuccess: () => {
@@ -71,8 +73,21 @@ export default function SeoKeywordsCreationForm(props: Props) {
               <div className="sm: mr-4 mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <form onSubmit={handleSubmit} className="w-full space-y-4">
                   <h2 className="mb-4 text-center text-2xl font-bold">
-                    Seo Keywords Generation
+                    Video Generation
                   </h2>
+                  <div>
+                    <label>
+                      Video Length:
+                      <input
+                        name="videoLength"
+                        type="number"
+                        value={videoLength}
+                        onChange={(e) => setVideoLength(e.target.value)}
+                        placeholder="Enter the video length in seconds"
+                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
+                      />
+                    </label>
+                  </div>
                   <div>
                     <label>
                       Directives:
@@ -80,7 +95,7 @@ export default function SeoKeywordsCreationForm(props: Props) {
                         name="guidance"
                         value={guidance}
                         onChange={(e) => setGuidance(e.target.value)}
-                        placeholder="Provive some additional guidance for the AI to generate keywords for YOU!"
+                        placeholder="Provive some additional guidance for the AI to generate a video for YOU!"
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
                       />
                     </label>
@@ -88,7 +103,7 @@ export default function SeoKeywordsCreationForm(props: Props) {
                   {!isLoading ? (
                     <div className="flex justify-between bg-gray-50 px-4 py-3 sm:flex sm:px-6">
                       <button
-                        onClick={() => setIsNewSeoKeywordsModalOpen(false)}
+                        onClick={() => setIsNewVideoModalOpen(false)}
                         type="button"
                         className="mb-2 mr-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
                       >

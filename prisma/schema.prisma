@@ -103,6 +103,7 @@ model SeoKeyword {
 model Video {
   id          String        @id @default(cuid())
   projectId   String
+  length     Int
   project     Project       @relation(fields: [projectId], references: [id])
   scripts     VideoScript[]
   storyboards Storyboard[]
@@ -114,7 +115,7 @@ model Video {
 
 model VideoScript {
   id      String @id @default(cuid())
-  content String
+  content String @db.Text
   videoId String
   video   Video  @relation(fields: [videoId], references: [id])
   createdAt         DateTime     @default(now())
@@ -125,7 +126,7 @@ model VideoScript {
 
 model Storyboard {
   id      String @id @default(cuid())
-  content String
+  content String @db.Text
   videoId String
   video   Video  @relation(fields: [videoId], references: [id])
   createdAt         DateTime     @default(now())

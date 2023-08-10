@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import ProjectCreationForm from "./forms/ProjectCreationForm";
 import PostCreationForm from "./forms/PostCreationForm";
 import SeoKeywordsCreationForm from "./forms/SeoKeywordsCreationForm";
+import VideoCreationForm from "./forms/VideoCreationForm";
 interface Props {
   className?: string;
 }
@@ -17,6 +18,7 @@ export default function ContentCreationDialog(props: Props) {
   const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
   const [isNewSeoKeywordsModalOpen, setIsNewSeoKeywordsModalOpen] =
     useState(false);
+  const [isNewVideoModalOpen, setIsNewVideoModalOpen] = useState(false);
 
   const projectId = router.query.projectId as string | undefined;
   console.log("sessionData", sessionData);
@@ -46,7 +48,9 @@ export default function ContentCreationDialog(props: Props) {
                             </a>
                           </li>
                           <li>
-                            <a>Videos</a>
+                            <a onClick={() => setIsNewVideoModalOpen(true)}>
+                              Videos
+                            </a>
                           </li>
                           <li>
                             <a
@@ -83,6 +87,14 @@ export default function ContentCreationDialog(props: Props) {
             ReactDOM.createPortal(
               <SeoKeywordsCreationForm
                 setIsNewSeoKeywordsModalOpen={setIsNewSeoKeywordsModalOpen}
+                projectId={projectId}
+              />,
+              document.body
+            )}
+          {isNewVideoModalOpen &&
+            ReactDOM.createPortal(
+              <VideoCreationForm
+                setIsNewVideoModalOpen={setIsNewVideoModalOpen}
                 projectId={projectId}
               />,
               document.body
