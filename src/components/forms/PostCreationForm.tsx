@@ -3,6 +3,17 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
 import { SOCIAL_MEDIA_PLATFORMS } from "../utils/constants";
 
+import { SEOKeywordsMultiselect } from "./SeoKeywordsMultiselect";
+
+interface SeoKeywordSchema {
+  id: string;
+  keyword: string;
+  projectId: string;
+  pertinence: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface Props {
   className?: string;
   projectId: string | undefined;
@@ -12,8 +23,12 @@ interface Props {
 export default function PostCreationForm(props: Props) {
   const { className, projectId, setIsNewPostModalOpen } = props;
   const [errorMessage, setErrorMessage] = useState<string | null>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPostCreationLoading, setIsPostCreationLoading] =
+    useState<boolean>(false);
   const [guidance, setGuidance] = useState<string>("");
+  const [selectedSeoKeywords, setSelectedSeoKeywords] = useState<
+    SeoKeywordSchema[]
+  >([]);
   const [socialMediaPlatform, setSocialMediaPlatform] = useState<string>(
     SOCIAL_MEDIA_PLATFORMS[0]?.name || ""
   );
@@ -30,7 +45,7 @@ export default function PostCreationForm(props: Props) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsPostCreationLoading(true);
 
     if (!projectId) {
       setErrorMessage("Project ID is required");
@@ -50,11 +65,11 @@ export default function PostCreationForm(props: Props) {
       {
         onSuccess: () => {
           window.location.reload();
-          setIsLoading(false);
+          setIsPostCreationLoading(false);
         },
         onError: (error) => {
           setErrorMessage(error.message);
-          setIsLoading(false);
+          setIsPostCreationLoading(false);
         },
       }
     );
@@ -103,6 +118,13 @@ export default function PostCreationForm(props: Props) {
                       </select>
                     </label>
                   </div>
+
+                  <div className="w-full ">
+                    <SEOKeywordsMultiselect
+                      setSelectedSeoKeywords={setSelectedSeoKeywords}
+                      projectId={projectId}
+                    />
+                  </div>
                   <div>
                     <label>
                       Directives:
@@ -115,7 +137,7 @@ export default function PostCreationForm(props: Props) {
                       />
                     </label>
                   </div>
-                  {!isLoading ? (
+                  {!isPostCreationLoading ? (
                     <div className="flex justify-between bg-gray-50 px-4 py-3 sm:flex sm:px-6">
                       <button
                         onClick={() => setIsNewPostModalOpen(false)}
