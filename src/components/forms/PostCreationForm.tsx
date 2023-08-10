@@ -3,6 +3,18 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
 import { SOCIAL_MEDIA_PLATFORMS } from "../utils/constants";
 
+import { SeoKeywordsMultiselect } from "./SeoKeywordsMultiselect";
+import { SocialMediaRadioSelect } from "./SocialMediaRadioSelect";
+
+interface SeoKeywordSchema {
+  id: string;
+  keyword: string;
+  projectId: string;
+  pertinence: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface Props {
   className?: string;
   projectId: string | undefined;
@@ -12,8 +24,12 @@ interface Props {
 export default function PostCreationForm(props: Props) {
   const { className, projectId, setIsNewPostModalOpen } = props;
   const [errorMessage, setErrorMessage] = useState<string | null>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPostCreationLoading, setIsPostCreationLoading] =
+    useState<boolean>(false);
   const [guidance, setGuidance] = useState<string>("");
+  const [selectedSeoKeywords, setSelectedSeoKeywords] = useState<
+    SeoKeywordSchema[]
+  >([]);
   const [socialMediaPlatform, setSocialMediaPlatform] = useState<string>(
     SOCIAL_MEDIA_PLATFORMS[0]?.name || ""
   );
@@ -30,7 +46,7 @@ export default function PostCreationForm(props: Props) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsPostCreationLoading(true);
 
     if (!projectId) {
       setErrorMessage("Project ID is required");
@@ -50,11 +66,11 @@ export default function PostCreationForm(props: Props) {
       {
         onSuccess: () => {
           window.location.reload();
-          setIsLoading(false);
+          setIsPostCreationLoading(false);
         },
         onError: (error) => {
           setErrorMessage(error.message);
-          setIsLoading(false);
+          setIsPostCreationLoading(false);
         },
       }
     );
@@ -86,22 +102,18 @@ export default function PostCreationForm(props: Props) {
                   <h2 className="mb-4 text-center text-2xl font-bold">
                     Post Creation
                   </h2>
-                  <div>
-                    <label>
-                      Social Media Platform:
-                      <select
-                        name="socialMediaPlatform"
-                        value={socialMediaPlatform}
-                        onChange={handleInputChange}
-                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white"
-                      >
-                        {SOCIAL_MEDIA_PLATFORMS.map((platform) => (
-                          <option key={platform.name} value={platform.name}>
-                            {platform.name}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+
+                  <div className="w-full ">
+                    <SocialMediaRadioSelect
+                      setSocialMediaPlatform={setSocialMediaPlatform}
+                      socialMediaPlatform={socialMediaPlatform}
+                    />
+                  </div>
+                  <div className="w-full ">
+                    <SeoKeywordsMultiselect
+                      setSelectedSeoKeywords={setSelectedSeoKeywords}
+                      projectId={projectId}
+                    />
                   </div>
                   <div>
                     <label>
@@ -115,7 +127,7 @@ export default function PostCreationForm(props: Props) {
                       />
                     </label>
                   </div>
-                  {!isLoading ? (
+                  {!isPostCreationLoading ? (
                     <div className="flex justify-between bg-gray-50 px-4 py-3 sm:flex sm:px-6">
                       <button
                         onClick={() => setIsNewPostModalOpen(false)}
