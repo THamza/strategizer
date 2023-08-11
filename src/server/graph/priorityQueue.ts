@@ -17,8 +17,8 @@ class PriorityQueue {
     if (!element) return;
 
     while (idx > 0) {
-      let parentIdx = Math.floor((idx - 1) / 2);
-      let parent = this.values[parentIdx];
+      const parentIdx = Math.floor((idx - 1) / 2);
+      const parent = this.values[parentIdx];
       if (!parent) break;
 
       if (element.distance >= parent.distance) break;
@@ -49,12 +49,12 @@ class PriorityQueue {
     if (!element) return;
 
     while (true) {
-      let leftChildIdx = 2 * idx + 1;
-      let rightChildIdx = 2 * idx + 2;
+      const leftChildIdx = 2 * idx + 1;
+      const rightChildIdx = 2 * idx + 2;
       let swap: number | null = null;
 
-      let leftChild = this.values[leftChildIdx];
-      let rightChild = this.values[rightChildIdx];
+      const leftChild = this.values[leftChildIdx];
+      const rightChild = this.values[rightChildIdx];
 
       if (leftChild && leftChild.distance < element.distance) {
         swap = leftChildIdx;
