@@ -30,24 +30,24 @@ class Graph {
   shortestPath(sourceNodeId: string, targetNodeId: string): string[] | null {
     const distances: Map<string, number> = new Map();
     const previousNodes: Map<string, string | null> = new Map();
-    const unvisitedNodes: Set<string> = new Set(this.nodes.keys());
+    const pq: PriorityQueue = new PriorityQueue();
 
-    distances.set(sourceNodeId, 0);
+    // Initializing distance to every node as Infinity and source node's distance as 0
+    for (const nodeId of this.nodes.keys()) {
+      if (nodeId === sourceNodeId) {
+        distances.set(nodeId, 0);
+        pq.enqueue(nodeId, 0);
+      } else {
+        distances.set(nodeId, Infinity);
+      }
+      previousNodes.set(nodeId, null);
+    }
 
-    while (unvisitedNodes.size) {
-      let currentNode: string | undefined;
-      if (currentNode === undefined) {
-        currentNode = sourceNodeId;
-      }
-      for (const node of unvisitedNodes) {
-        if (
-          currentNode === undefined ||
-          (distances.get(node) || Infinity) <
-            (distances.get(currentNode) || Infinity)
-        ) {
-          currentNode = node;
-        }
-      }
+    while (!pq.isEmpty()) {
+      const currentNode = pq.dequeue();
+
+      // if the currentNode is undefined, then there's something wrong
+      if (!currentNode) continue;
 
       if (currentNode === targetNodeId) {
         const path: string[] = [];
@@ -62,14 +62,13 @@ class Graph {
         return path;
       }
 
-      unvisitedNodes.delete(currentNode);
-
       const neighbors = this.edges.get(currentNode) || new Set();
       for (const neighbor of neighbors) {
         const alt = (distances.get(currentNode) || 0) + 1; // Since weight is 1 for all edges
         if (alt < (distances.get(neighbor) || Infinity)) {
           distances.set(neighbor, alt);
           previousNodes.set(neighbor, currentNode);
+          pq.enqueue(neighbor, alt); // Update the priority queue with the new distance
         }
       }
     }
