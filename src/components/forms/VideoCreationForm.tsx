@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { api, type RouterOutputs } from "../../utils/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {
   className?: string;
@@ -14,6 +16,7 @@ export default function VideoCreationForm(props: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [guidance, setGuidance] = useState<string>("");
   const [videoLength, setVideoLength] = useState<string>("");
+  const [showToast, setShowToast] = useState(false);
 
   const videoCreationMutation = api.video.create.useMutation({
     onSuccess: (d) => {
@@ -24,11 +27,17 @@ export default function VideoCreationForm(props: Props) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
+    toast("Generating...");
+    setShowToast(true);
     if (!projectId) {
       setErrorMessage("Project ID is required");
       return;
     }
+
+    // Do it better with websockets
+    setTimeout(() => {
+      window.location.reload();
+    }, 30000);
 
     videoCreationMutation.mutate(
       {
@@ -38,12 +47,13 @@ export default function VideoCreationForm(props: Props) {
       },
       {
         onSuccess: () => {
-          window.location.reload();
+          // window.location.reload();
           setIsLoading(false);
         },
         onError: (error) => {
           setErrorMessage(error.message);
           setIsLoading(false);
+          setShowToast(false);
         },
       }
     );
@@ -51,6 +61,7 @@ export default function VideoCreationForm(props: Props) {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
+      <ToastContainer autoClose={30000} />
       <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
