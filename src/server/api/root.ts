@@ -3,6 +3,19 @@ import { projectRouter } from "./routers/project";
 import { postRouter } from "./routers/post";
 import { seoKeywordsRouter } from "./routers/seoKeywords";
 import { videoRouter } from "./routers/video";
+import { RabbitMQManager } from "../../utils/jobQueue/RabbitMQManager";
+
+async function initialize() {
+  try {
+    await RabbitMQManager.initialize();
+    // Initialize other parts of your app here, like your tRPC server
+  } catch (error) {
+    console.error("Failed to initialize RabbitMQ:", error);
+    process.exit(1); // Exit the process as RabbitMQ is essential
+  }
+}
+
+void initialize();
 
 /**
  * This is the primary router for your server.

@@ -25,6 +25,7 @@
     "@upstash/ratelimit": "^0.4.3",
     "@upstash/redis": "^1.22.0",
     "@vercel/analytics": "^1.0.2",
+    "amqplib": "^0.10.3",
     "clipboard-copy": "^4.0.1",
     "codemirror": "^6.0.1",
     "jest": "^29.6.1",

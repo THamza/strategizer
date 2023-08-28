@@ -1,3 +1,6 @@
+import { promptGraphMetadataSchema } from "./tsStyles";
+import { z } from "zod";
+
 export type Project = {
   name: string;
   industry: string;
@@ -17,3 +20,10 @@ export type NodeData = {
   prompt: string;
   isIndependent: boolean;
 };
+
+export interface ContentGenerationTask {
+  userId: string;
+  projectId: string;
+  contentType: string;
+  metadata: z.infer<typeof promptGraphMetadataSchema>;
+}
