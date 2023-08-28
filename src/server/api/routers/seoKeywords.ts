@@ -109,54 +109,60 @@ export const seoKeywordsRouter = createTRPCRouter({
         };
       }
 
-      // Get the response using AI chat
-      const responseString = await new AiChatManager().getResponse(prompt);
+      // Run AI chat and Prisma operations asynchronously
+      new AiChatManager()
+        .getResponse(prompt)
+        .then((responseString) => {
+          let response;
+          try {
+            response = JSON.parse(responseString);
+          } catch (error) {
+            console.error("Failed to parse the response:", error);
+            return;
+          }
 
-      let response;
-      try {
-        response = JSON.parse(responseString);
-      } catch (error) {
-        throw new Error("Failed to parse the response.");
-      }
+          if (!Array.isArray(response)) {
+            console.error(
+              "Invalid response format: Expected an array of objects."
+            );
+            return;
+          }
 
-      // Validate the response structure
-      if (!Array.isArray(response)) {
-        throw new Error(
-          "Invalid response format: Expected an array of objects."
-        );
-      }
+          for (const item of response) {
+            if (
+              typeof item !== "object" ||
+              !item.hasOwnProperty("keyword") ||
+              typeof item.keyword !== "string" ||
+              !item.hasOwnProperty("pertinence") ||
+              typeof item.pertinence !== "number" ||
+              item.pertinence < 1 ||
+              item.pertinence > 10
+            ) {
+              console.error(
+                "Invalid response format: Each object should have a 'keyword' (string) and a 'pertinence' (number between 1 to 10) property."
+              );
+              return;
+            }
 
-      const seoKeywordsList: string[] = [];
-
-      for (const item of response) {
-        if (
-          typeof item !== "object" ||
-          !item.hasOwnProperty("keyword") ||
-          typeof item.keyword !== "string" ||
-          !item.hasOwnProperty("pertinence") ||
-          typeof item.pertinence !== "number" ||
-          item.pertinence < 1 ||
-          item.pertinence > 10
-        ) {
-          throw new Error(
-            "Invalid response format: Each object should have a 'keyword' (string) and a 'pertinence' (number between 1 to 10) property."
-          );
-        }
-
-        await ctx.prisma.seoKeyword.create({
-          data: {
-            keyword: item.keyword,
-            pertinence: item.pertinence,
-            projectId: input.projectId,
-          },
+            ctx.prisma.seoKeyword
+              .create({
+                data: {
+                  keyword: item.keyword,
+                  pertinence: item.pertinence,
+                  projectId: input.projectId,
+                },
+              })
+              .catch((error) => {
+                console.error("Failed to create SEO keyword:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to get AI response:", error);
         });
-
-        seoKeywordsList.push(item.keyword as string);
-      }
 
       return {
         success: true,
-        seoKeywords: seoKeywordsList,
       };
     }),
 });

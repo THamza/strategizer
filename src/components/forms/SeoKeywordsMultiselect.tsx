@@ -103,7 +103,10 @@ export const SeoKeywordsMultiselect = (props: {
               />
             </div>
             <button
-              className="h-10 rounded-r-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+              // className="h-10 rounded-r-lg bg-blue-500 px-4 py-2  text-white hover:bg-blue-600 focus:outline-none"
+              className="h-10 rounded-r-lg bg-gray-500 px-4 py-2  text-white"
+              // disable this button
+              disabled={true}
               onClick={(e) => {
                 e.preventDefault();
                 setNewKeyword("");

@@ -5,6 +5,8 @@ import { SOCIAL_MEDIA_PLATFORMS } from "../utils/constants";
 
 import { SeoKeywordsMultiselect } from "./SeoKeywordsMultiselect";
 import { SocialMediaRadioSelect } from "./SocialMediaRadioSelect";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 
 interface SeoKeywordSchema {
   id: string;
@@ -33,6 +35,7 @@ export default function PostCreationForm(props: Props) {
   const [socialMediaPlatform, setSocialMediaPlatform] = useState<string>(
     SOCIAL_MEDIA_PLATFORMS[0]?.name || ""
   );
+  const [showToast, setShowToast] = useState(false);
 
   const postCreationMutation = api.post.create.useMutation({
     onSuccess: (d) => {
@@ -47,7 +50,8 @@ export default function PostCreationForm(props: Props) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsPostCreationLoading(true);
-
+    toast("Generating...");
+    setShowToast(true);
     if (!projectId) {
       setErrorMessage("Project ID is required");
       return;
@@ -57,6 +61,11 @@ export default function PostCreationForm(props: Props) {
       return;
     }
 
+    // Do it better with websockets
+    setTimeout(() => {
+      window.location.reload();
+    }, 30000);
+
     postCreationMutation.mutate(
       {
         projectId,
@@ -65,12 +74,14 @@ export default function PostCreationForm(props: Props) {
       },
       {
         onSuccess: () => {
-          window.location.reload();
+          // window.location.reload();
           setIsPostCreationLoading(false);
+          // setIsNewPostModalOpen(false);
         },
         onError: (error) => {
           setErrorMessage(error.message);
           setIsPostCreationLoading(false);
+          setShowToast(false);
         },
       }
     );
@@ -78,6 +89,7 @@ export default function PostCreationForm(props: Props) {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
+      <ToastContainer autoClose={30000} />
       <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>

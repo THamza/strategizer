@@ -108,18 +108,26 @@ export const postRouter = createTRPCRouter({
       }
 
       // Get the response using AI chat
-      const response = await new AiChatManager().getResponse(prompt);
-
-      const post = await ctx.prisma.post.create({
-        data: {
-          content: response,
-          projectId: input.projectId,
-        },
-      });
+      new AiChatManager()
+        .getResponse(prompt)
+        .then((response) => {
+          ctx.prisma.post
+            .create({
+              data: {
+                content: response,
+                projectId: input.projectId,
+              },
+            })
+            .catch((error) => {
+              console.error("Failed to create post:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Failed to get AI response:", error);
+        });
 
       return {
         success: true,
-        post: post,
       };
     }),
 });

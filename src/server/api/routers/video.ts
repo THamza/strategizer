@@ -80,42 +80,51 @@ export const videoRouter = createTRPCRouter({
       );
 
       const aiChatManager = new AiChatManager();
-      const scriptContent = await aiChatManager.getResponse(scriptPrompt || "");
 
-      metadata.videoScript = scriptContent;
+      aiChatManager
+        .getResponse(scriptPrompt || "")
+        .then((scriptContent) => {
+          metadata.videoScript = scriptContent;
 
-      const storyboardPrompt = promptManager.getPrompt(
-        "storyboard",
-        getFormatedProject(project),
-        promptGraphMetadataSchema.parse(metadata)
-      );
+          // Get storyboard content
+          const storyboardPrompt = promptManager.getPrompt(
+            "storyboard",
+            getFormatedProject(project),
+            promptGraphMetadataSchema.parse(metadata)
+          );
 
-      const storyboardContent = await aiChatManager.getResponse(
-        storyboardPrompt || ""
-      );
-
-      const createdVideo = await ctx.prisma.video.create({
-        data: {
-          projectId: input.projectId,
-          length: isNaN(parseInt(input.videoLength, 10))
-            ? 0
-            : parseInt(input.videoLength, 10),
-          scripts: {
-            create: {
-              content: scriptContent,
-            },
-          },
-          storyboards: {
-            create: {
-              content: storyboardContent,
-            },
-          },
-        },
-      });
+          return aiChatManager.getResponse(storyboardPrompt || "");
+        })
+        .then((storyboardContent) => {
+          ctx.prisma.video
+            .create({
+              data: {
+                projectId: input.projectId,
+                length: isNaN(parseInt(input.videoLength, 10))
+                  ? 0
+                  : parseInt(input.videoLength, 10),
+                scripts: {
+                  create: {
+                    content: metadata.videoScript,
+                  },
+                },
+                storyboards: {
+                  create: {
+                    content: storyboardContent,
+                  },
+                },
+              },
+            })
+            .catch((err) => {
+              console.error("Failed to create video:", err);
+            });
+        })
+        .catch((err) => {
+          console.error("Failed to get AI response:", err);
+        });
 
       return {
         success: true,
-        video: createdVideo,
       };
     }),
 });
