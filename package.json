@@ -21,7 +21,7 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
-    "@uiw/react-codemirror": "^4.19.9",
+    "@uiw/react-codemirror": "^4.21.18",
     "@upstash/ratelimit": "^0.4.3",
     "@upstash/redis": "^1.22.0",
     "@vercel/analytics": "^1.0.2",
