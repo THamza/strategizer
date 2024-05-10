@@ -23,7 +23,7 @@
     "@trpc/server": "^10.9.0",
     "@uiw/react-codemirror": "^4.19.9",
     "@upstash/ratelimit": "^0.4.3",
-    "@upstash/redis": "^1.22.0",
+    "@upstash/redis": "^1.30.0",
     "@vercel/analytics": "^1.0.2",
     "clipboard-copy": "^4.0.1",
     "codemirror": "^6.0.1",
